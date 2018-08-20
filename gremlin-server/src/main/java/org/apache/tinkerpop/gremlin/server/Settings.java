@@ -228,6 +228,8 @@ public class Settings {
 
     public AuthenticationSettings authentication = new AuthenticationSettings();
 
+    public ProcessedResultLogSettings processedResultLog = new ProcessedResultLogSettings();
+
     /**
      * Custom settings for {@link OpProcessor} implementations. Implementations are loaded via
      * {@link ServiceLoader} but custom configurations can be supplied through this configuration.
@@ -439,6 +441,11 @@ public class Settings {
          * {@link Authenticator} implementation for specifics on what configurations are expected.
          */
         public Map<String, Object> config = null;
+    }
+
+    public static class ProcessedResultLogSettings {
+
+        public String method = null;
     }
 
     /**

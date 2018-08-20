@@ -29,7 +29,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.Operator;
 import org.apache.tinkerpop.gremlin.process.traversal.Order;
 import org.apache.tinkerpop.gremlin.process.traversal.Pop;
 import org.apache.tinkerpop.gremlin.process.traversal.Scope;
-import org.apache.tinkerpop.gremlin.server.OpProcessor;
+import org.apache.tinkerpop.gremlin.server.util.processedResultLog.ProcessedResultLoggerManager;
 import org.apache.tinkerpop.gremlin.structure.Column;
 import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.server.Context;
@@ -54,7 +54,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
@@ -247,7 +246,9 @@ public abstract class AbstractEvalOpProcessor extends AbstractOpProcessor {
                         if (address.startsWith("/") && address.length() > 1) address = address.substring(1);
                         auditLogger.info("User with address {} requested: {}", address, script);
                     }
-
+                    if(settings.processedResultLog.method != null){
+                        ProcessedResultLoggerManager.INST.log(itty, settings.processedResultLog.method);
+                    }
                     try {
                         handleIterator(context, itty);
                     } catch (Exception ex) {
