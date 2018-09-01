@@ -66,14 +66,15 @@ Possible values are:
 
 [.result]
 ====
-* basic (default)
-* info
+* basic
+* enhanced (default)
 * ipo
 * all
 ====
 
 ==== basic
-Basic format is logging only an additional result without any other piece of information.
+Basic format is logging only a processed result without any other piece of information.
+No errors are logged neither - only successful processed results are logged.
 This type of format is thus suited for the case when the processedResultLog is logged
 into a separate file.
 
