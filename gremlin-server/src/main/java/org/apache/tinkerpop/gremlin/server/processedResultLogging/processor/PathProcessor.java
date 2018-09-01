@@ -21,20 +21,22 @@ package org.apache.tinkerpop.gremlin.server.processedResultLogging.processor;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.DefaultGraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.ImmutablePath;
+import org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.util.ObjectAnonymizer;
 import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.LLOProcessedResult;
+import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.LSProcessedResult;
 import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.ProcessedResult;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringJoiner;
 
-public class PathProcessor implements ResultProcessor {
+public class PathProcessor implements AnonymizedResultProcessor {
+
+    private GraphTraversal logIt;
 
     public ProcessedResult process(Iterator it) throws IllegalArgumentException {
-        if (!(it instanceof DefaultGraphTraversal)) {
-            throw ResultProcessor.Exceptions.unsupportedResultTypeForGivenMethod();
-        }
-        GraphTraversal logIt = ((DefaultGraphTraversal) it).clone().path();
+        init(it);
         List<List<Object>> resultList = new ArrayList<>();
 
         if (!logIt.hasNext()) {
@@ -44,5 +46,34 @@ public class PathProcessor implements ResultProcessor {
             resultList.add(((ImmutablePath) logIt.next()).objects());
         }
         return new LLOProcessedResult(resultList);
+    }
+
+    public ProcessedResult processAnonymously(Iterator it) {
+        init(it);
+        List<String> resultList = new ArrayList<>();
+
+        if (!logIt.hasNext()) {
+            return new LSProcessedResult(resultList);
+        }
+
+        while (logIt.hasNext()) {
+            List<Object> pathObjects = ((ImmutablePath) logIt.next()).objects();
+            StringJoiner pathJoiner = new StringJoiner(",");
+            for (int i = 0; i < pathObjects.size(); i++) {
+                String anonymizedObject = ObjectAnonymizer.toString(pathObjects.get(i));
+                if (anonymizedObject != null) {
+                    pathJoiner.add(anonymizedObject);
+                }
+            }
+            resultList.add(pathJoiner.toString());
+        }
+        return new LSProcessedResult(resultList);
+    }
+
+    private void init(Iterator it) throws IllegalArgumentException{
+        if (!(it instanceof DefaultGraphTraversal)) {
+            throw ResultProcessor.Exceptions.unsupportedResultTypeForGivenMethod();
+        }
+        logIt = ((DefaultGraphTraversal) it).clone().path();
     }
 }

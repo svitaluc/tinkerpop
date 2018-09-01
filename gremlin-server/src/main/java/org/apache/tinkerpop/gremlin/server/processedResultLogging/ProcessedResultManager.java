@@ -31,6 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class ProcessedResultManager {
 
@@ -38,17 +40,20 @@ public final class ProcessedResultManager {
     private static final Logger processedResultLogger = LoggerFactory.getLogger(GremlinServer.PROCESSED_RESULT_LOGGER_NAME);
     private ProcessedResultFormatter formatter = new BasicProcessedResultFormatter();
     private ResultProcessor processor = new PathProcessor();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
     private ProcessedResultManager() {
-
     }
 
     public void log(Context ctx, Iterator it) {
+        executor.submit(() -> logAsync(ctx, it));
+    }
+
+    private void logAsync(Context ctx, Iterator it) {
         Settings.ProcessedResultLogSettings settings = ctx.getSettings().processedResultLog;
         try {
             if (!this.processor.getClass().getName().equals(settings.processor)) {
                 try {
-
                     Class processorClass = Class.forName(settings.processor);
                     this.processor = ((Class<ResultProcessor>) processorClass).getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
@@ -77,8 +82,7 @@ public final class ProcessedResultManager {
             processedResultLogger.info(formatter.format(ctx, result));
         } catch (IllegalArgumentException e) {
             processedResultLogger.warn(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             processedResultLogger.error("Unexpected exception", e);
         }
     }

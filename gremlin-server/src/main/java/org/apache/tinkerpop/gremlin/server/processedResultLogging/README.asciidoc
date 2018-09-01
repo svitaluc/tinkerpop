@@ -16,66 +16,124 @@ limitations under the License.
 ////
 = Processed Result Logging
 
-Processed Result Logging enables to perform an additional operation on
-a result of a query and to log the outcome of this additional operation.
+Processed Result Logging enables to silently perform an additional operation on
+a result of a query and to log the outcome of this additional operation in a
+predefined format.
 
-In order to successfully log an outcome of an additional operation, logging
-of the operation must be supported. A list of supported methods is part of
-this readme.
-Logging of not yet supported method can be implemented extending the interface
-of ProcessedResultLogger.
+In order to successfully log an outcome of an additional operation, the operation
+must be supported for processed result logging. A <<List of supported methods>>
+is part of
+this readme, but it is not difficult to extend a specific interface with another
+method (for further information see section <<For Developers>>).
 
 It is possible to use a provided format or to create a custom implementation of
-a format in order to log various type of information. A list of provided formats
-is part of this readme. A new format can be implemented extending an interface
-of ProcessedResultFormat.
+a format in order to log various type of information. A <<List of provided formats>>
+is part of this readme.
+
+For business purposes a method can provide an anonymized log of the processed result,
+so that the sensitive data wouldn't be exposed.
+The <<List of supported methods>> contains the information if the method
+supports anonymous logging or not.
 
 
-== List of currently supported methods
+== List of supported methods
 
-Currently supported methods for processing a result are:
+Currently supported methods for processing a result, their full processor names and
+if they support anonymized logging:
 
 [.result]
 ====
 * path
+  ** - org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.PathProcessor
+  ** - supports anonymized logging
 ====
 
-== Settings
+For detailed information see section <<Methods>>.
 
-In order to set a processed result logging corresponding options must be
-set in a yaml configuration file.
+== List of provided formats
 
-The configuration file to be adjusted is `conf/gremlin-server.yaml`.
-
-=== method
-A required property determining the method to be run on a result is
-
-`processedResultLog.method`.
-
-Argument of the `method`
-property is a name of the method to be run on a query result. The method name
-must match a provided method from the List of currently provided methods.
-
-
-=== format
-An optional property setting for log format is
-
-`processedResultLog.format`
-
-Possible values are:
+Currently supported formats for processed result logging are:
 
 [.result]
 ====
 * basic
-* enhanced (default)
-* ipo
-* all
+  *** - org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter`
+* query
 ====
 
-==== basic
+For description of the formats see section <<Formats>>.
+
+== Settings
+
+In order to set a processed result logging, corresponding options must be
+set in a yaml configuration file.
+
+The configuration file to be adjusted is `conf/gremlin-server.yaml`.
+
+=== enabled
+A required property when you want to use Processed Result Logging is
+the property
+
+`processedResultLog.enabled`
+
+`default value: false`
+
+If you want to log processed results, the `enabled` property must be set to `true`.
+
+=== processor
+An optional property determining the method to be run on a result is
+
+`processedResultLog.processor`
+
+`default value: org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.PathProcessor`
+
+Argument of the `processor`
+property is the full name name of a class providing the processed result logging.
+So it is a class implementing the ResultProcessor interface.
+
+
+=== format
+An optional property setting a log format is
+
+`processedResultLog.format`
+
+`default value: org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter`
+
+See the <<List of provided formats>> and <<Formats>> section
+
+=== anonymized
+An optional property setting an anonymized log is
+
+`processedResultLog.anonymized`
+
+`default value: false`
+
+An anonymized log shouldn't contain any specific information about data stored in
+the graph.
+
+== Methods
+
+=== path
+If a query results is of a GraphTraversal type, a path method is performed on the
+result and its outcome is logged.
+For description of the path step see
+link:http://tinkerpop.apache.org/docs/current/reference/#path-step[Documentation].
+
+Example of a pure path output: +
+`v[1], e[7][1-knows->2], v[2], vadas`
+
+==== anonymized
+An anonymized version of a path method produces output without the last result.
+
+Example of a pure path output in anonymized mode: +
+`v[1], e[7][1-knows->2], v[2]`
+
+== Formats
+
+=== basic
 Basic format is logging only a processed result without any other piece of information.
-No errors are logged neither - only successful processed results are logged.
-This type of format is thus suited for the case when the processedResultLog is logged
+This type of forg.apache.tinkerpop.gremlin.server.processedResultLogging.processor.PathProcessor`
+format is thus suited for the case when the processedResultLog is logged
 into a separate file.
 
 _Example of basic format output_
