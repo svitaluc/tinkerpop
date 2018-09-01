@@ -18,8 +18,7 @@
  */
 package org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter;
 
-import org.apache.tinkerpop.gremlin.driver.Tokens;
-import org.apache.tinkerpop.gremlin.server.Context;
+import org.apache.tinkerpop.gremlin.server.processedResultLogging.context.LogContext;
 import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.ProcessedResult;
 
 
@@ -28,10 +27,10 @@ import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.Process
  */
 public class QueryProcessedResultFormatter implements ProcessedResultFormatter {
     @Override
-    public String format(Context ctx, ProcessedResult result) {
+    public String format(LogContext ctx, ProcessedResult result) {
         return String.join("\n",
                 "#QUERY:",
-                (String) ctx.getRequestMessage().getArgs().get(Tokens.ARGS_GREMLIN),
+                ctx.getQuery(),
                 "#PR:",
                 result.toString());
     }

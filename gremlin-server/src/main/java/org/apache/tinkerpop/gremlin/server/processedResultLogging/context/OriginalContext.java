@@ -16,14 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter;
+package org.apache.tinkerpop.gremlin.server.processedResultLogging.context;
 
-import org.apache.tinkerpop.gremlin.server.processedResultLogging.context.LogContext;
-import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.ProcessedResult;
+import org.apache.tinkerpop.gremlin.driver.Tokens;
+import org.apache.tinkerpop.gremlin.server.Context;
 
-public class BasicProcessedResultFormatter implements ProcessedResultFormatter {
+public class OriginalContext extends LogContext{
+
+    public OriginalContext(Context ctx) {
+        super(ctx);
+    }
+
     @Override
-    public String format(LogContext ctx, ProcessedResult result) {
-        return result.toString();
+    public String getQuery() {
+        return (String) ctx.getRequestMessage().getArgs().get(Tokens.ARGS_GREMLIN);
     }
 }

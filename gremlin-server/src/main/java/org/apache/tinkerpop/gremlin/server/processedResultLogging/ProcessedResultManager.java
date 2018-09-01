@@ -21,6 +21,9 @@ package org.apache.tinkerpop.gremlin.server.processedResultLogging;
 import org.apache.tinkerpop.gremlin.server.Context;
 import org.apache.tinkerpop.gremlin.server.GremlinServer;
 import org.apache.tinkerpop.gremlin.server.Settings;
+import org.apache.tinkerpop.gremlin.server.processedResultLogging.context.AnonymizedContext;
+import org.apache.tinkerpop.gremlin.server.processedResultLogging.context.LogContext;
+import org.apache.tinkerpop.gremlin.server.processedResultLogging.context.OriginalContext;
 import org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter;
 import org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.ProcessedResultFormatter;
 import org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.AnonymizedResultProcessor;
@@ -71,17 +74,22 @@ public final class ProcessedResultManager {
                 }
             }
             ProcessedResult result;
+            LogContext logCtx;
             if (settings.anonymized && processor instanceof AnonymizedResultProcessor) {
                 result = ((AnonymizedResultProcessor) processor).processAnonymously(it);
+                logCtx = new AnonymizedContext(ctx);
             } else if (settings.anonymized) {
                 processedResultLogger.error("Requested processor class: " + settings.processor + " does not implement " + AnonymizedResultProcessor.class.getSimpleName());
                 return;
             } else {
                 result = processor.process(it);
+                logCtx = new OriginalContext(ctx);
             }
-            processedResultLogger.info(formatter.format(ctx, result));
+            processedResultLogger.info(formatter.format(logCtx, result));
         } catch (IllegalArgumentException e) {
             processedResultLogger.warn(e.getMessage());
+        } catch (UnsupportedOperationException e) {
+            processedResultLogger.error("Requested formatter logs data that are not yet supported in an anonymized output. Set anonymized property false or use another formatter.");
         } catch (Exception e) {
             processedResultLogger.error("Unexpected exception", e);
         }
