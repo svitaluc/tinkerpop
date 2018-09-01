@@ -27,5 +27,4 @@ import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.Process
  */
 public interface ProcessedResultFormatter {
     public String format(Context ctx, ProcessedResult result);
-
 }

@@ -26,9 +26,13 @@ import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.Process
 /**
  * This {@link ProcessedResultFormatter} will format the result in a format: "query, result".
  */
-public class QueryResultFormatter implements ProcessedResultFormatter {
+public class QueryProcessedResultFormatter implements ProcessedResultFormatter {
     @Override
     public String format(Context ctx, ProcessedResult result) {
-        return String.join(", ", (String) ctx.getRequestMessage().getArgs().get(Tokens.ARGS_GREMLIN), result.toString());
-        }
-        }
+        return String.join("\n",
+                "#QUERY:",
+                (String) ctx.getRequestMessage().getArgs().get(Tokens.ARGS_GREMLIN),
+                "#PR:",
+                result.toString());
+    }
+}

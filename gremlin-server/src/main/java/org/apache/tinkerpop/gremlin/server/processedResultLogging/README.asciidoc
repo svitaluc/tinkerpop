@@ -57,8 +57,9 @@ Currently supported formats for processed result logging are:
 [.result]
 ====
 * basic
-  *** - org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter`
+  ** - org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter
 * query
+  ** - org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.QueryProcessedResultFormatter
 ====
 
 For description of the formats see section <<Formats>>.
@@ -99,7 +100,7 @@ An optional property setting a log format is
 
 `default value: org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter`
 
-See the <<List of provided formats>> and <<Formats>> section
+See the <<List of provided formats>> and <<Formats>> section for further information.
 
 === anonymized
 An optional property setting an anonymized log is
@@ -108,41 +109,55 @@ An optional property setting an anonymized log is
 
 `default value: false`
 
-An anonymized log shouldn't contain any specific information about data stored in
+An anonymized log shouldn't contain any client information about data stored in
 the graph.
 
 == Methods
 
 === path
-If a query results is of a GraphTraversal type, a path method is performed on the
+If a query result is of a GraphTraversal type, a path method is silently performed on the
 result and its outcome is logged.
 For description of the path step see
 link:http://tinkerpop.apache.org/docs/current/reference/#path-step[Documentation].
 
-Example of a pure path output: +
-`v[1], e[7][1-knows->2], v[2], vadas`
+_Example of a pure path output:_
+
+ v[1], e[7][1-knows->2], v[2], vadas
 
 ==== anonymized
 An anonymized version of a path method produces output without the last result.
 
-Example of a pure path output in anonymized mode: +
-`v[1], e[7][1-knows->2], v[2]`
+_Example of a pure path output in anonymized mode:_
+
+  v:1,e:7,v:2
 
 == Formats
 
 === basic
-Basic format is logging only a processed result without any other piece of information.
-This type of forg.apache.tinkerpop.gremlin.server.processedResultLogging.processor.PathProcessor`
-format is thus suited for the case when the processedResultLog is logged
+Basic format is logging only a processed result without any other piece of
+information.
+It can be thus suited for the case when the processedResultLog is logged
 into a separate file.
 
-_Example of basic format output_
+_Example of basic format output:_
 
  v[1], e[7][1-knows->2], v[2], vadas
  v[1], e[8][1-knows->4], v[4], josh
 
-==== info
-Info format
+==== query
+
+Query format logs first query and then its processed results. In order to
+determine the two types of information, query is preceded with `QUERY:` line
+and the set of processed results is preceded with `PR:` (
+
+_Example of basic format output:_
+
+ #QUERY:
+ g.V(1).outE('knows').inV().values('name')
+ #PR:
+ v:1,e:7,v:2
+ v:1,e:8,v:4
+
 
 
 == Example

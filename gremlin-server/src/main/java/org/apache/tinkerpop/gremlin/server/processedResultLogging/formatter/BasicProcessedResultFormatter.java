@@ -24,6 +24,6 @@ import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.Process
 public class BasicProcessedResultFormatter implements ProcessedResultFormatter {
     @Override
     public String format(Context ctx, ProcessedResult result) {
-        return "Processed result: \nPRL-CSV-START:\n" + result.toString() + "\nPRL-CSV-STOP";
+        return result.toString();
     }
 }
