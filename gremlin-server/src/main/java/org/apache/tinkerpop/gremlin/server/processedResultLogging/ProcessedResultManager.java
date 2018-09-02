@@ -38,6 +38,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
+ * This class represents an entry point to processedResultLogging package.
  * In order to create a processed result log, use a {@link ProcessedResultManager}. It is a singleton class
  * which instance can call a log method.
  * En example usage:

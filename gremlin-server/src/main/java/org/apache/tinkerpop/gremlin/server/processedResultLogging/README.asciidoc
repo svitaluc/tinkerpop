@@ -21,35 +21,35 @@ a result of a query and to log the outcome of this additional operation in a
 predefined format.
 
 In order to successfully log an outcome of an additional operation, the operation
-must be supported for processed result logging. A <<List of supported methods>>
+must be supported for processed result logging. A <<List of supported processors>>
 is part of
 this readme, but it is not difficult to extend a specific interface with another
-method (for further information see section <<For Developers>>).
+processor (for further information see section <<For Developers>>).
 
 It is possible to use a provided format or to create a custom implementation of
 a format in order to log various type of information. A <<List of provided formats>>
 is part of this readme.
 
-For business purposes a method can provide an anonymized log of the processed result,
+For business purposes a processor can provide an anonymized log of the processed result,
 so that the sensitive data wouldn't be exposed.
-The <<List of supported methods>> contains the information if the method
+The <<List of supported processors>> contains the information if the processor
 supports anonymous logging or not. Some formats don't have to be yet compatible with
 anonymized logging.
 
 
-== List of supported methods
+== List of supported processors
 
-Currently supported methods for processing a result, their full processor names and
+Currently supported result processors, their full class names and
 whether they support anonymized logging:
 
 [.result]
 ====
-* path
-  ** - org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.PathProcessor
-  ** - supports anonymized logging
+* PathProcessor
+  ** org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.PathProcessor
+  ** supports anonymized logging
 ====
 
-For detailed information see section <<Methods>>.
+For detailed information see section <<Processors>>.
 
 == List of provided formats
 
@@ -75,54 +75,18 @@ set in a yaml configuration file.
 
 The configuration file to be adjusted is `conf/gremlin-server.yaml`.
 
-=== enabled
-A required property when you want to use Processed Result Logging is
-the property
+[width="100%",cols="3,10,^2",options="header"]
+|=========================================================
+|Key |Description |Default
+| enabled | Enables Processed Result Logging. To start Processed Result Logging set this property to 'true'. |false
+| processor | An optional property determining a processor to be run on a result. Argument of the `processor` property is the fully qualified classname of a class providing the processed result logging. It is a class implementing the ResultProcessor interface.|PathProcessor
+| formatter | An optional property setting a log format. Argument of the `formatter` property is the fully qualified classname of a class providing the formatter. It is a class implementing the ProcessedResultFormatter interface. See the <<List of provided formats>> and <<Formats>> section for further information.|BasicProcessedResultFormatter
+| anonymized | An optional property setting an anonymized log. An anonymized log shouldn't contain any sensitive information about data stored in a graph. |false
+|=========================================================
 
-`processedResultLog.enabled`
+== Processors
 
-`default value: false`
-
-If you want to log processed results, the `enabled` property must be set to `true`.
-
-=== processor
-An optional property determining the method to be run on a result is
-
-`processedResultLog.processor`
-
-`default value: org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.PathProcessor`
-
-Argument of the `processor`
-property is the full name name of a class providing the processed result logging.
-It is a class implementing the ResultProcessor interface.
-
-
-=== formatter
-An optional property setting a log format is
-
-`processedResultLog.formatter`
-
-`default value: org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter`
-
-Argument of the `formatter`
-property is the full name name of a class providing the formatter.
-It is a class implementing the ProcessedResultFormatter interface.
-
-See the <<List of provided formats>> and <<Formats>> section for further information.
-
-=== anonymized
-An optional property setting an anonymized log is
-
-`processedResultLog.anonymized`
-
-`default value: false`
-
-An anonymized log shouldn't contain any client information about data stored in
-the graph.
-
-== Methods
-
-=== path
+=== PathProcessor
 If a query result is of a GraphTraversal type, a path method is silently performed on the
 result and its outcome is logged.
 For description of the path-step see
@@ -133,7 +97,7 @@ _Example of a basic path output:_
  v[1], e[7][1-knows->2], v[2], vadas
 
 ==== anonymized
-An anonymized version of a path method produces output without the result and edge label.
+An anonymized version of the PathProcessor produces output without the result and edge label.
 
 _Example of a basic path output in anonymized mode:_
 
@@ -167,14 +131,13 @@ _Example of basic format output:_
  v[1], e[7][1-knows->2], v[2], vadas
  v[1], e[8][1-knows->4], v[4], josh
 
-
 == For Developers
 
-New extensions of Processed Result Logging are welcomed, but try to follow the
-applied architecture. That is:
+New extensions of Processed Result Logging are welcomed, but please follow
+these rules.
 
-=== method
-If you want to support new method, create a class called `<method-name>Processor`
+=== processor
+If you want to support a new method, create a class called `<method-name>Processor`
 which implements the interface `ResultProcessor` and locate it within `processor`
 package.
 
@@ -192,4 +155,4 @@ Formatter has two parameters - LogContext and ProcessedResult. LogContext is an
 encapsulated Context (org.apache.tinkerpop.gremlin.server.Context) that can either
 be in an original form (as OriginalContext) or in an anonymized form (as AnonymizedContext).
 If you want to extend AnonymizedContext, please make sure that the return value of your
-implemented method truly cannot contain any sensitive information.
+implemented processor truly cannot contain any sensitive information.
