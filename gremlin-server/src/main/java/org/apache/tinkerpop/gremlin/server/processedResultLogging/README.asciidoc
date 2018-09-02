@@ -26,8 +26,8 @@ is part of
 this readme, but it is not difficult to extend a specific interface with another
 processor (for further information see section <<For Developers>>).
 
-It is possible to use a provided format or to create a custom implementation of
-a format in order to log various type of information. A <<List of provided formats>>
+It is possible to use a provided formatter or to create a custom implementation of
+a formatter in order to log various type of information. A <<List of provided formatters>>
 is part of this readme.
 
 For business purposes a processor can provide an anonymized log of the processed result,
@@ -51,22 +51,22 @@ whether they support anonymized logging:
 
 For detailed information see section <<Processors>>.
 
-== List of provided formats
+== List of provided formatters
 
-Currently supported formats for processed result logging, their full names and
+Currently supported formatters for processed result logging, their full names and
 whether they are compatible with anonymized logging:
 
 [.result]
 ====
 * basic
-  ** - org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter
-  ** - is compatible with anonymized logging
+  ** org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.BasicProcessedResultFormatter
+  ** is compatible with anonymized logging
 * query
-  ** - org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.QueryProcessedResultFormatter
-  ** - is not yet compatible with anonymized logging
+  ** org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.QueryProcessedResultFormatter
+  ** is not yet compatible with anonymized logging
 ====
 
-For description of the formats see section <<Formats>>.
+For description of the formatters see section <<Formatters>>.
 
 == Settings
 
@@ -116,10 +116,10 @@ _Example of a basic path output in anonymized mode:_
 
   v:1,e:7,v:2
 
-== Formats
+== Formatters
 
-=== basic
-Basic format is logging only a processed result without any other piece of
+=== BasicProcessedResultFormatter
+Basic formatter is logging only a processed result without any other piece of
 information.
 It can be thus suited for the case when the processedResultLog is logged
 into a separate file a further parsed.
@@ -129,9 +129,9 @@ _Example of basic format output:_
  v[1], e[7][1-knows->2], v[2], vadas
  v[1], e[8][1-knows->4], v[4], josh
 
-==== query
+==== QueryProcessedResultFormatter
 
-Query format logs first query and then its processed results. In order to
+Query formatter logs first query and then its processed results. In order to
 determine the two types of information, query is preceded with `#QUERY:` line
 and the set of processed results is preceded with `#PR:` line.
 This format is not yet compatible with anonymized logging.
@@ -159,7 +159,7 @@ implement the interface `AnonymizedResultProcessor` which already extends the
 `ResultProcessor` interface. Please make sure that your anonymized version of an output
 truly cannot contain any sensitive information.
 
-=== format
+=== formatter
 If you want to create a new formatter, create a class called `<formatter-name>Formatter`
 which implements the interface `ProcessedResultFormatter` and locate it within
 `formatter` package.
