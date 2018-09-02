@@ -23,8 +23,16 @@ import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.Process
 
 
 /**
- * This interface defines the base processor for formating the processed result to log.
+ *  A {@link ProcessedResultFormatter} formats {@link LogContext} and {@link ProcessedResult} into a final log.
+ *  The Formatter takes a LogContext and a ProcessedResult ond converts them to a string.
+ *  Some formatters (such as the BasicProcessedResultFormatter) don't need to use information from a LogContext.
  */
 public interface ProcessedResultFormatter {
+    /**
+     * Format the given LogContext and ProcessedResult and return the formatted string.
+     * @param ctx - the context which pieces of information can be formatted
+     * @param result - the processed result to be formatted
+     * @return the formatted context information and processed result
+     */
     public String format(LogContext ctx, ProcessedResult result);
 }

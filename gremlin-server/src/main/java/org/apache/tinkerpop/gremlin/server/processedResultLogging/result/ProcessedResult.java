@@ -18,6 +18,12 @@
  */
 package org.apache.tinkerpop.gremlin.server.processedResultLogging.result;
 
+import org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.ResultProcessor;
+
+/**
+ * A {@link ProcessedResult} represents a result of a {@link ResultProcessor} containing an output of the additional
+ * operation run on an original result.
+ */
 public abstract class ProcessedResult {
     private Object result;
 

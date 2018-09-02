@@ -21,7 +21,22 @@ package org.apache.tinkerpop.gremlin.server.processedResultLogging.processor.uti
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
+/**
+ * An {@link ObjectAnonymizer} creates an anonymized version of an object. It expects the object to be either instance of
+ *    - an {@link Edge}
+ *    - a {@link Vertex}
+ *    - other
+ * It anonymizes only an {@link Edge} or a {@link Vertex} object and returns null for other object types.
+ */
 public class ObjectAnonymizer {
+    /**
+     * Creates anonymized string of an Object. An object is anonymized as:
+     *    - an {@link Edge}: "e:<id>"
+     *    - a {@link Vertex}: "v:<id>"
+     *    - other: null
+     * @param object - an {@link Edge}, a {@link Vertex} or another type of Object
+     * @return an anonymized string value of an object, null if the input object isn't an {@link Edge} or a {@link Vertex}
+     */
     public static String toString(Object object) {
         if (object instanceof Edge) {
             return "e:" + ((Edge) object).id();

@@ -22,6 +22,15 @@ import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.Process
 
 import java.util.Iterator;
 
+/**
+ * An {@link AnonymizedResultProcessor} extends {@link ResultProcessor} with an anonymized option of a processed result.
+ */
 public interface AnonymizedResultProcessor extends ResultProcessor {
+    /**
+     * Processes the original result in a form of an {@link Iterator} to create an anonymized processed result.
+     * @param it - original iterator that produces required result
+     * @return anonymized processed result which is an outcome of a specific method used in a specific implementation
+     *      * of the {@link ResultProcessor}
+     */
     public ProcessedResult processAnonymously(Iterator it);
 }

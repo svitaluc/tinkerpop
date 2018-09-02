@@ -21,6 +21,9 @@ package org.apache.tinkerpop.gremlin.server.processedResultLogging.result;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A {@link LLOProcessedResult} is a {@link ProcessedResult} of a type List<List<Object>>.
+ */
 public class LLOProcessedResult extends ProcessedResult {
     private List<List<Object>> result;
 

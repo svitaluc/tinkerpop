@@ -19,13 +19,26 @@
 package org.apache.tinkerpop.gremlin.server.processedResultLogging.context;
 
 import org.apache.tinkerpop.gremlin.server.Context;
+import org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter.ProcessedResultFormatter;
 
+/**
+ * A {@link LogContext} encapsulates {@link Context} for easier usage and controlled behavior of anonymized logs.
+ * A {@link LogContext} is used in {@link ProcessedResultFormatter} to provide information for a final log.
+ */
 public abstract class LogContext {
+    /**
+     * Original context containing all the related information that can be acquired with corresponding getter methods.
+     */
     protected Context ctx;
 
     public LogContext(Context ctx) {
         this.ctx = ctx;
     }
 
-    public abstract String getQuery();
+    /**
+     * Gets query that produced a corresponding result. Depending on the implementation of a {@link LogContext} class,
+     * the returned object can be either in an original or an adjusted form to meet the objective of that subclass.
+     * @return query in a requested form
+     */
+    public abstract Object getQuery();
 }

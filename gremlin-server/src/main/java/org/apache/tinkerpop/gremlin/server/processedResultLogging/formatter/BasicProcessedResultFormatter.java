@@ -21,6 +21,9 @@ package org.apache.tinkerpop.gremlin.server.processedResultLogging.formatter;
 import org.apache.tinkerpop.gremlin.server.processedResultLogging.context.LogContext;
 import org.apache.tinkerpop.gremlin.server.processedResultLogging.result.ProcessedResult;
 
+/**
+ * A {@link BasicProcessedResultFormatter} formats ignores a log context and logs a processed result as such.
+ */
 public class BasicProcessedResultFormatter implements ProcessedResultFormatter {
     @Override
     public String format(LogContext ctx, ProcessedResult result) {

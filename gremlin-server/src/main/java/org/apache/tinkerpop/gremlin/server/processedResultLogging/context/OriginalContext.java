@@ -21,6 +21,9 @@ package org.apache.tinkerpop.gremlin.server.processedResultLogging.context;
 import org.apache.tinkerpop.gremlin.driver.Tokens;
 import org.apache.tinkerpop.gremlin.server.Context;
 
+/**
+ * A {@link OriginalContext} represents the original {@link Context} providing its values unchanged.
+ */
 public class OriginalContext extends LogContext{
 
     public OriginalContext(Context ctx) {
@@ -28,7 +31,7 @@ public class OriginalContext extends LogContext{
     }
 
     @Override
-    public String getQuery() {
-        return (String) ctx.getRequestMessage().getArgs().get(Tokens.ARGS_GREMLIN);
+    public Object getQuery() {
+        return ctx.getRequestMessage().getArgs().get(Tokens.ARGS_GREMLIN);
     }
 }

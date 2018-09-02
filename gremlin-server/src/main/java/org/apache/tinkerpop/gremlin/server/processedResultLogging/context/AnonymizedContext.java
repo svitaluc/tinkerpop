@@ -20,6 +20,9 @@ package org.apache.tinkerpop.gremlin.server.processedResultLogging.context;
 
 import org.apache.tinkerpop.gremlin.server.Context;
 
+/**
+ * A {@link AnonymizedContext} provides anonymized values of the original {@link Context}.
+ */
 public class AnonymizedContext extends LogContext {
 
     public AnonymizedContext(Context ctx) {
@@ -27,7 +30,7 @@ public class AnonymizedContext extends LogContext {
     }
 
     @Override
-    public String getQuery() throws UnsupportedOperationException {
+    public Object getQuery() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 }
