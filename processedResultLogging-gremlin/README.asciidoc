@@ -1,0 +1,171 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+////
+= Processed Result Logging
+
+Processed Result Logging enables to silently perform an additional operation on
+a result of a query and to log the outcome of this additional operation in a
+predefined format.
+
+In order to successfully log an outcome of an additional operation, the operation
+must be supported for processed result logging. A <<List of supported processors>>
+is part of
+this readme, but it is not difficult to extend a specific interface with another
+processor (for further information see section <<For Developers>>).
+
+It is possible to use a provided formatter or to create a custom implementation of
+a formatter in order to log various type of information. A <<List of provided formatters>>
+is part of this readme.
+
+For business purposes a processor can provide an anonymized log of the processed result,
+so that the sensitive data wouldn't be exposed.
+The <<List of supported processors>> contains the information if the processor
+supports anonymous logging or not. Some formats don't have to be yet compatible with
+anonymized logging.
+
+
+== List of supported processors
+
+Currently supported result processors, their full class names and
+whether they support anonymized logging:
+
+[.result]
+====
+* PathProcessor
+  ** org.apache.tinkerpop.processedResultLogging.processor.PathProcessor
+  ** supports anonymized logging
+====
+
+For detailed information see section <<Processors>>.
+
+== List of provided formatters
+
+Currently supported formatters for processed result logging, their full names and
+whether they are compatible with anonymized logging:
+
+[.result]
+====
+* basic
+  ** org.apache.tinkerpop.processedResultLogging.formatter.BasicProcessedResultFormatter
+  ** is compatible with anonymized logging
+* query
+  ** org.apache.tinkerpop.processedResultLogging.formatter.QueryProcessedResultFormatter
+  ** is not yet compatible with anonymized logging
+====
+
+For description of the formatters see section <<Formatters>>.
+
+== Settings
+
+In order to set a processed result logging, corresponding options must be
+set in a yaml configuration file.
+
+The configuration file to be adjusted is `conf/gremlin-server.yaml`.
+
+The key for these properties is `processedResultLog`.
+
+[width="100%",cols="3,10,^2",options="header"]
+|=========================================================
+|Subkey |Description |Default
+| enabled | Enables Processed Result Logging. To start Processed Result Logging set this property to 'true'. |false
+| processor | An optional property determining a processor to be run on a result. Argument of the `processor` property is the fully qualified classname of a class providing the processed result logging. It is a class implementing the ResultProcessor interface.|PathProcessor
+| formatter | An optional property setting a log format. Argument of the `formatter` property is the fully qualified classname of a class providing the formatter. It is a class implementing the ProcessedResultFormatter interface. See the <<List of provided formats>> and <<Formats>> section for further information.|BasicProcessedResultFormatter
+| anonymized | An optional property setting an anonymized log. An anonymized log shouldn't contain any sensitive information about data stored in a graph. |false
+|=========================================================
+
+=== Example
+Settings for Processed Result Logging with PathProcessor, QueryFormatter can for example look as follows
+
+ processedResultLog: {
+    enabled: true
+    org.apache.tinkerpop.processedResultLogging.processor: org.apache.tinkerpop.processedResultLogging.processor.PathProcessor
+    org.apache.tinkerpop.processedResultLogging.formatter: org.apache.tinkerpop.processedResultLogging.formatter.QueryProcessedResultFormatter
+ }
+
+Processor property doesn't have to be mentioned in this case as PathProcessor is a default value. For an anonymized property we used false value (by default).
+
+== Processors
+
+=== PathProcessor
+If a query result is of a GraphTraversal type, a path method is silently performed on the
+result and its outcome is logged.
+For description of the path-step see
+link:http://tinkerpop.apache.org/docs/current/reference/#path-step[Documentation].
+
+_Example of a basic path output:_
+
+ v[1], e[7][1-knows->2], v[2], vadas
+
+==== anonymized
+An anonymized version of the PathProcessor produces output without the result and edge label.
+
+_Example of a basic path output in anonymized mode:_
+
+  v:1,e:7,v:2
+
+== Formatters
+
+=== BasicProcessedResultFormatter
+Basic formatter is logging only a processed result without any other piece of
+information.
+It can be thus suited for the case when the processedResultLog is logged
+into a separate file a further parsed.
+
+_Example of basic format output:_
+
+ v[1], e[7][1-knows->2], v[2], vadas
+ v[1], e[8][1-knows->4], v[4], josh
+
+==== QueryProcessedResultFormatter
+
+Query formatter logs first query and then its processed results. In order to
+determine the two types of information, query is preceded with `#QUERY:` line
+and the set of processed results is preceded with `#PR:` line.
+This format is not yet compatible with anonymized logging.
+
+_Example of basic format output:_
+
+ #QUERY:
+ g.V(1).outE('knows').inV().values('name')
+ #PR:
+ v[1], e[7][1-knows->2], v[2], vadas
+ v[1], e[8][1-knows->4], v[4], josh
+
+== For Developers
+
+New extensions of Processed Result Logging are welcomed, but please follow
+these rules.
+
+=== processor
+If you want to support a new method, create a class called `<method-name>Processor`
+which implements the interface `ResultProcessor` and locate it within `processor`
+package.
+
+If you want to create an anonymized version of an output as well, your class should
+implement the interface `AnonymizedResultProcessor` which already extends the
+`ResultProcessor` interface. Please make sure that your anonymized version of an output
+truly cannot contain any sensitive information.
+
+=== formatter
+If you want to create a new formatter, create a class called `<formatter-name>Formatter`
+which implements the interface `ProcessedResultFormatter` and locate it within
+`formatter` package.
+
+Formatter has two parameters - LogContext and ProcessedResult. LogContext is an
+encapsulated Context (org.apache.tinkerpop.gremlin.server.Context) that can either
+be in an original form (as OriginalContext) or in an anonymized form (as AnonymizedContext).
+If you want to extend AnonymizedContext, please make sure that the return value of your
+implemented processor truly cannot contain any sensitive information.
