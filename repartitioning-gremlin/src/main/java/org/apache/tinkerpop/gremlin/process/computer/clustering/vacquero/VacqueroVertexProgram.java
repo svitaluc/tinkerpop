@@ -25,17 +25,18 @@ import org.apache.tinkerpop.gremlin.process.computer.util.StaticVertexProgram;
 import org.apache.tinkerpop.gremlin.process.traversal.Operator;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.MapHelper;
-import org.apache.tinkerpop.gremlin.structure.Graph;
-import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.apache.tinkerpop.gremlin.structure.VertexProperty;
+import org.apache.tinkerpop.gremlin.structure.*;
+import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.javatuples.Pair;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable, Long>> {
 
-    private MessageScope.Local<?> voteScope = MessageScope.Local.of(__::bothE);
+    private MessageScope.Local<?> voteScope = MessageScope.Local.of(() -> __.bothE(EDGE_LABEL));
 
     public static final String LABEL = "gremlin.VaqueroVertexProgram.label";
     public static final String ARE_MOCEKD_PARTITIONS = "gremlin.VaqueroVertexProgram.areMockedPartitions";
@@ -44,8 +45,10 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
     public static final String ACQUIRE_LABEL_PROBABILITY = "gremlin.VaqueroVertexProgram.acquireLabelProbability";
     private static final String VOTE_TO_HALT = "gremlin.VaqueroVertexProgram.voteToHalt";
     private static final String MAX_ITERATIONS = "gremlin.VaqueroVertexProgram.maxIterations";
+    private static final String EDGE_LABEL = "queriedTogether";
     private Random random = new Random();
 
+    private StandardJanusGraph graph;
     private long maxIterations = 30;
     private int clusterCount = 16;
     //custer label -> (capacity, usage) TODO check if properly stored in memory by CLUSTERS key
@@ -87,7 +90,15 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
             Iterator<Pair<Serializable, Long>> rcvMsgs = messenger.receiveMessages();
             if (random.nextDouble() > 1 - acquireLabelProbability) {
                 //count label frequency
-                rcvMsgs.forEachRemaining(msg -> MapHelper.incr(labels, msg.getValue1(), 1L));
+                rcvMsgs.forEachRemaining(msg -> {
+                    AtomicReference<Edge> edge = new AtomicReference<>();
+                    vertex.edges(Direction.BOTH, EDGE_LABEL).forEachRemaining((e) -> {
+                        AtomicBoolean thatEdge = new AtomicBoolean(false);
+                        e.bothVertices().forEachRemaining(vertex1 -> thatEdge.set(vertex1.id().equals(msg.getValue0())));
+                        if (thatEdge.get()) edge.set(e);
+                    });
+                    MapHelper.incr(labels, msg.getValue1(), edge.get().<Long>value("times"));
+                });
                 //get most frequent label
                 Long mfLabel = Collections.max(labels.entrySet(), Comparator.comparingLong(Map.Entry::getValue)).getKey();
                 if (mfLabel.equals(vertex.<Long>value(LABEL))) { //label is the same - voting to halt the program
@@ -140,6 +151,7 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
 
     @Override
     public void loadState(final Graph graph, final Configuration configuration) {
+        this.graph = (StandardJanusGraph) graph;
         this.maxIterations = configuration.getInt(MAX_ITERATIONS, 30);
         this.clusterCount = configuration.getInt(CLUSTER_COUNT, 16);
         this.acquireLabelProbability = configuration.getDouble(ACQUIRE_LABEL_PROBABILITY, 0.5);

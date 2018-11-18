@@ -7,6 +7,9 @@
         <groupId>org.apache.tinkerpop</groupId>
         <version>3.3.3</version>
     </parent>
+    <properties>
+        <janusgraph.version>0.3.0</janusgraph.version>
+    </properties>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>repartitioning-gremlin</artifactId>
@@ -16,7 +19,11 @@
             <groupId>org.apache.tinkerpop</groupId>
             <artifactId>gremlin-core</artifactId>
             <version>${project.version}</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.janusgraph</groupId>
+            <artifactId>janusgraph-core</artifactId>
+            <version>${janusgraph.version}</version>
         </dependency>
     </dependencies>
 
