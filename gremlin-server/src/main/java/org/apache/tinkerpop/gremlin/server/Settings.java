@@ -29,13 +29,13 @@ import org.apache.tinkerpop.gremlin.server.auth.AllowAllAuthenticator;
 import org.apache.tinkerpop.gremlin.server.auth.Authenticator;
 import org.apache.tinkerpop.gremlin.server.channel.WebSocketChannelizer;
 import org.apache.tinkerpop.gremlin.server.handler.AbstractAuthenticationHandler;
-import org.apache.tinkerpop.processedResultLogging.ProcessedResultManager;
-import org.apache.tinkerpop.processedResultLogging.formatter.ProcessedResultFormatter;
-import org.apache.tinkerpop.processedResultLogging.processor.ResultProcessor;
+//import org.apache.tinkerpop.processedResultLogging.ProcessedResultManager;
+//import org.apache.tinkerpop.processedResultLogging.formatter.ProcessedResultFormatter;
+//import org.apache.tinkerpop.processedResultLogging.processor.ResultProcessor;
 import org.apache.tinkerpop.gremlin.server.util.DefaultGraphManager;
 import org.apache.tinkerpop.gremlin.server.util.LifeCycleHook;
-import org.apache.tinkerpop.processedResultLogging.formatter.BasicProcessedResultFormatter;
-import org.apache.tinkerpop.processedResultLogging.processor.PathProcessor;
+//import org.apache.tinkerpop.processedResultLogging.formatter.BasicProcessedResultFormatter;
+//import org.apache.tinkerpop.processedResultLogging.processor.PathProcessor;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
@@ -232,7 +232,7 @@ public class Settings {
 
     public AuthenticationSettings authentication = new AuthenticationSettings();
 
-    public ProcessedResultLogSettings processedResultLog = new ProcessedResultLogSettings();
+//    public ProcessedResultLogSettings processedResultLog = new ProcessedResultLogSettings();
 
     /**
      * Custom settings for {@link OpProcessor} implementations. Implementations are loaded via
@@ -449,31 +449,31 @@ public class Settings {
 
     /**
      * Settings for the {@link ProcessedResultManager} implementation.
-     */
+     *//*
     public static class ProcessedResultLogSettings {
-        /**
+        *//**
          * Enable processed result logging. Other settings will be ignored unless this is set to true.
          * Default to false when not specified, so no processed result will be logged regardless other
          * properties setting.
-         */
+         *//*
         public boolean enabled = false;
-        /**
+        *//**
          * The fully qualified class name of the {@link ResultProcessor} implementation.
          * This class name will be used to load the implementation from the classpath.
          * Default to {@link PathProcessor} when not specified.
-         */
+         *//*
         public String processor = PathProcessor.class.getName();
-        /**
+        *//**
          * The fully qualified class name of the {@link ProcessedResultFormatter} implementation.
          * This class name will be used to load the implementation from the classpath.
          * Default to {@link BasicProcessedResultFormatter} when not specified.
-         */
+         *//*
         public String formatter = BasicProcessedResultFormatter.class.getName();
-        /**
+        *//**
          * Anonymizes sensitive data in log. Default to false when not specified.
-         */
+         *//*
         public boolean anonymized = false;
-    }
+    }*/
 
     /**
      * Settings to configure SSL support.

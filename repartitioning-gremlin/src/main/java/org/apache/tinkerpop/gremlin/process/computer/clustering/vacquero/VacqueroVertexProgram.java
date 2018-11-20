@@ -26,7 +26,6 @@ import org.apache.tinkerpop.gremlin.process.traversal.Operator;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.MapHelper;
 import org.apache.tinkerpop.gremlin.structure.*;
-import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.javatuples.Pair;
 
 import java.io.Serializable;
@@ -34,6 +33,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+//TODO check WorkerExecutor
 public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable, Long>> {
 
     private MessageScope.Local<?> voteScope = MessageScope.Local.of(() -> __.bothE(EDGE_LABEL));
@@ -48,7 +48,7 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
     private static final String EDGE_LABEL = "queriedTogether";
     private Random random = new Random();
 
-    private StandardJanusGraph graph;
+    private Graph graph;
     private long maxIterations = 30;
     private int clusterCount = 16;
     //custer label -> (capacity, usage) TODO check if properly stored in memory by CLUSTERS key
@@ -151,7 +151,7 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
 
     @Override
     public void loadState(final Graph graph, final Configuration configuration) {
-        this.graph = (StandardJanusGraph) graph;
+        this.graph = graph;
         this.maxIterations = configuration.getInt(MAX_ITERATIONS, 30);
         this.clusterCount = configuration.getInt(CLUSTER_COUNT, 16);
         this.acquireLabelProbability = configuration.getDouble(ACQUIRE_LABEL_PROBABILITY, 0.5);

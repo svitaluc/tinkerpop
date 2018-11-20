@@ -18,6 +18,11 @@
  */
 package org.apache.tinkerpop.processedResultLogging.result;
 
+import com.google.gson.*;
+import org.apache.tinkerpop.gremlin.structure.Edge;
+import org.apache.tinkerpop.gremlin.structure.Vertex;
+
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +30,31 @@ import java.util.stream.Collectors;
  * A {@link LLOProcessedResult} is a {@link ProcessedResult} of a type List<List<Object>>.
  */
 public class LLOProcessedResult extends ProcessedResult {
+    public static class Serializer implements JsonSerializer<LLOProcessedResult> {
+        @Override
+        public JsonElement serialize(LLOProcessedResult src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject jsonResult = new JsonObject();
+            jsonResult.addProperty("Q", "");
+            JsonArray jsonQueryResults = new JsonArray();
+            for (List<Object> path : src.result) {
+                JsonArray jsonPath = new JsonArray();
+                for (Object element : path) {
+                    JsonObject jsonObject = new JsonObject();
+                    if (element instanceof Vertex)
+                        jsonObject.addProperty("v", (Number) ((Vertex) element).id());
+                    else if (element instanceof Edge)
+                        jsonObject.addProperty("e", (Number) ((Edge) element).id());
+                    else
+                        jsonObject.addProperty("unknownType", element.getClass().getSimpleName());
+                    jsonPath.add(jsonObject);
+                }
+                jsonQueryResults.add(jsonPath);
+            }
+            jsonResult.add("R", jsonQueryResults);
+            return jsonResult;
+        }
+    }
+
     private List<List<Object>> result;
 
     public LLOProcessedResult(List<List<Object>> result) {

@@ -20,11 +20,11 @@
             <artifactId>gremlin-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.janusgraph</groupId>
             <artifactId>janusgraph-core</artifactId>
             <version>${janusgraph.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 </project>

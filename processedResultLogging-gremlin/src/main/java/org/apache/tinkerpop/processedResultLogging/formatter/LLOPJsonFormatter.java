@@ -18,21 +18,21 @@
  */
 package org.apache.tinkerpop.processedResultLogging.formatter;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.tinkerpop.processedResultLogging.context.LogContext;
+import org.apache.tinkerpop.processedResultLogging.result.LLOProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 
-
-/**
- *  A {@link ProcessedResultFormatter} formats {@link LogContext} and {@link ProcessedResult} into a final log.
- *  The Formatter takes a LogContext and a ProcessedResult ond converts them to a string.
- *  Some formatters (such as the BasicProcessedResultFormatter) don't need to use information from a LogContext.
- */
-public interface ProcessedResultFormatter {
-    /**
-     * Format the given LogContext and ProcessedResult and return the formatted string.
-     * @param ctx - the context which pieces of information can be formatted
-     * @param result - the processed result to be formatted
-     * @return the formatted context information and processed result
-     */
-    public String format(LogContext ctx, ProcessedResult result) throws Exception;
+public class LLOPJsonFormatter implements ProcessedResultFormatter {
+    private static Gson gson;
+    static {
+        gson = new GsonBuilder().registerTypeAdapter(LLOProcessedResult.class, new LLOProcessedResult.Serializer()).create();
+    }
+    @Override
+    public String format(LogContext ctx, ProcessedResult result) throws Exception {
+        if(!(result instanceof LLOProcessedResult))
+            throw new Exception("The result for this formatter needs to be of type LLOProcessedResult");
+        return gson.toJson(result);
+    }
 }

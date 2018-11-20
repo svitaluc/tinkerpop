@@ -18,6 +18,7 @@
  */
 package org.apache.tinkerpop.processedResultLogging.processor;
 
+import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.DefaultGraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.ImmutablePath;
@@ -26,10 +27,7 @@ import org.apache.tinkerpop.processedResultLogging.result.LLOProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.LSProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 /**
  * A {@link PathProcessor} calls a {@link GraphTraversal#path()} method on a copy of an original result.
@@ -46,7 +44,9 @@ public class PathProcessor implements AnonymizedResultProcessor {
             return new LLOProcessedResult(resultList);
         }
         while (logIt.hasNext()) {
-            resultList.add(((ImmutablePath) logIt.next()).objects());
+            Path p = (ImmutablePath) logIt.next();
+            System.out.println(Arrays.toString(p.objects().toArray()));
+            resultList.add((p).objects());
         }
         return new LLOProcessedResult(resultList);
     }
@@ -73,7 +73,7 @@ public class PathProcessor implements AnonymizedResultProcessor {
         return new LSProcessedResult(resultList);
     }
 
-    private void init(Iterator it) throws IllegalArgumentException{
+    private void init(Iterator it) throws IllegalArgumentException {
         if (!(it instanceof DefaultGraphTraversal)) {
             throw ResultProcessor.Exceptions.unsupportedResultTypeForGivenMethod();
         }
