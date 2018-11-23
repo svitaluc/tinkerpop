@@ -55,10 +55,12 @@ public final class LogPathStrategy extends AbstractTraversalStrategy<TraversalSt
 
     @Override
     public void apply(final Traversal.Admin<?, ?> traversal) {
-        if(traversal instanceof DefaultGraphTraversal && !traversal.getEndStep().getLabels().contains(MARKER) && ! (traversal.getEndStep() instanceof PathStep)) {
-            traversal.getStrategies().removeStrategies(LogPathStrategy.class);
+        if(traversal instanceof DefaultGraphTraversal && ! (traversal.getEndStep() instanceof PathStep)) {
+            Traversal.Admin<?, ?> clone = traversal.clone();
+//            System.out.println(clone.getStrategies().getStrategy(LogPathStrategy.class).toString());
+//            System.out.println(clone.getStrategies().removeStrategies(LogPathStrategy.class).getStrategy(LogPathStrategy.class).toString());
 //            System.out.println(Arrays.toString(traversal.getSteps().toArray()));
-            ProcessedResultManager.INST.log(null,traversal);
+            ProcessedResultManager.INST.log(null,clone);
         }
 
     }

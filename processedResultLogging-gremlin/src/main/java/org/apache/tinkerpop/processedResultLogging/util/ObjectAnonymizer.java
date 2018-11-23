@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.tinkerpop.processedResultLogging.processor.util;
+package org.apache.tinkerpop.processedResultLogging.util;
 
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;

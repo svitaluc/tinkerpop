@@ -22,7 +22,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.DefaultGraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.ImmutablePath;
-import org.apache.tinkerpop.processedResultLogging.processor.util.ObjectAnonymizer;
+import org.apache.tinkerpop.processedResultLogging.util.ObjectAnonymizer;
 import org.apache.tinkerpop.processedResultLogging.result.LLOProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.LSProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
@@ -45,7 +45,7 @@ public class PathProcessor implements AnonymizedResultProcessor {
         }
         while (logIt.hasNext()) {
             Path p = (ImmutablePath) logIt.next();
-            System.out.println(Arrays.toString(p.objects().toArray()));
+//            System.out.println(Arrays.toString(p.objects().toArray()));
             resultList.add((p).objects());
         }
         return new LLOProcessedResult(resultList);

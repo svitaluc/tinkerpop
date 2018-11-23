@@ -33,13 +33,12 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-//TODO check WorkerExecutor
 public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable, Long>> {
 
     private MessageScope.Local<?> voteScope = MessageScope.Local.of(() -> __.bothE(EDGE_LABEL));
 
     public static final String LABEL = "gremlin.VaqueroVertexProgram.label";
-    public static final String ARE_MOCEKD_PARTITIONS = "gremlin.VaqueroVertexProgram.areMockedPartitions";
+    public static final String ARE_MOCKED_PARTITIONS = "gremlin.VaqueroVertexProgram.areMockedPartitions";
     public static final String CLUSTER_COUNT = "gremlin.VaqueroVertexProgram.clusterCount";
     public static final String CLUSTERS = "gremlin.VaqueroVertexProgram.clusters";
     public static final String ACQUIRE_LABEL_PROBABILITY = "gremlin.VaqueroVertexProgram.acquireLabelProbability";
@@ -48,7 +47,6 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
     private static final String EDGE_LABEL = "queriedTogether";
     private Random random = new Random();
 
-    private Graph graph;
     private long maxIterations = 30;
     private int clusterCount = 16;
     //custer label -> (capacity, usage) TODO check if properly stored in memory by CLUSTERS key
@@ -83,6 +81,10 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
         if (memory.isInitialIteration()) {
             if (areMockedPartitions)
                 vertex.property(VertexProperty.Cardinality.single, LABEL, (long) random.nextInt(clusterCount));
+            else {
+                long cluster =
+                vertex.property(VertexProperty.Cardinality.single, LABEL, (long) random.nextInt(clusterCount));
+            }
         } else if (1 == memory.getIteration()) { //first iteration - there is on message receiving
             messenger.sendMessage(voteScope, new Pair<>((Serializable) vertex.id(), vertex.<Long>value(LABEL)));
         } else {
@@ -151,12 +153,11 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
 
     @Override
     public void loadState(final Graph graph, final Configuration configuration) {
-        this.graph = graph;
         this.maxIterations = configuration.getInt(MAX_ITERATIONS, 30);
         this.clusterCount = configuration.getInt(CLUSTER_COUNT, 16);
         this.acquireLabelProbability = configuration.getDouble(ACQUIRE_LABEL_PROBABILITY, 0.5);
         this.initialClusters = (Map<Long, Pair<Long, Long>>) configuration.getProperty(CLUSTERS);
-        this.areMockedPartitions = configuration.getBoolean(ARE_MOCEKD_PARTITIONS, false);
+        this.areMockedPartitions = configuration.getBoolean(ARE_MOCKED_PARTITIONS, false);
     }
 
     @Override
@@ -166,7 +167,7 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
         configuration.setProperty(CLUSTER_COUNT, this.clusterCount);
         configuration.setProperty(ACQUIRE_LABEL_PROBABILITY, this.acquireLabelProbability);
         configuration.setProperty(CLUSTERS, this.initialClusters);
-        configuration.setProperty(ARE_MOCEKD_PARTITIONS, this.areMockedPartitions);
+        configuration.setProperty(ARE_MOCKED_PARTITIONS, this.areMockedPartitions);
     }
 
 
@@ -201,7 +202,7 @@ public class VacqueroVertexProgram extends StaticVertexProgram<Pair<Serializable
 
         //for testing purpose
         public VacqueroVertexProgram.Builder areMockedPartitions(boolean value) {
-            this.configuration.setProperty(ARE_MOCEKD_PARTITIONS, value);
+            this.configuration.setProperty(ARE_MOCKED_PARTITIONS, value);
             return this;
         }
 

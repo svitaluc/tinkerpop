@@ -31,6 +31,7 @@ import org.apache.tinkerpop.processedResultLogging.processor.AnonymizedResultPro
 import org.apache.tinkerpop.processedResultLogging.processor.PathProcessor;
 import org.apache.tinkerpop.processedResultLogging.processor.ResultProcessor;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
+import org.apache.tinkerpop.processedResultLogging.util.SimpleLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,12 +49,12 @@ import java.util.concurrent.Executors;
 public final class ProcessedResultManager {
 
     public static final ProcessedResultManager INST = new ProcessedResultManager();
-    private static final Logger processedResultLogger = LoggerFactory.getLogger(GremlinServer.PROCESSED_RESULT_LOGGER_NAME);
+//    private static final Logger processedResultLogger = LoggerFactory.getLogger(GremlinServer.PROCESSED_RESULT_LOGGER_NAME);
+    private static final Logger processedResultLogger = new SimpleLogger();
     private ProcessedResultFormatter formatter = new BasicProcessedResultFormatter();
     private ResultProcessor processor = new PathProcessor();
     private final ExecutorService executor = Executors.newCachedThreadPool();
     private ProcessedResultManager.Settings settings;
-
     /**
      * Settings for the {@link ProcessedResultManager} implementation.
      */
