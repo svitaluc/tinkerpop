@@ -247,7 +247,7 @@ public class DefaultTraversal<S, E> implements Traversal.Admin<S, E> {
             clone.steps = new ArrayList<>();
             clone.unmodifiableSteps = Collections.unmodifiableList(clone.steps);
             clone.sideEffects = this.sideEffects.clone();
-            clone.strategies = this.strategies.clone();
+            clone.strategies = this.strategies;
             clone.bytecode = this.bytecode.clone();
             for (final Step<?, ?> step : this.steps) {
                 final Step<?, ?> clonedStep = step.clone();

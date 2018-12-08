@@ -18,7 +18,6 @@
  */
 package org.apache.tinkerpop.processedResultLogging.formatter;
 
-import org.apache.tinkerpop.processedResultLogging.context.LogContext;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 
 /**
@@ -26,7 +25,7 @@ import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
  */
 public class BasicProcessedResultFormatter implements ProcessedResultFormatter {
     @Override
-    public String format(LogContext ctx, ProcessedResult result) {
+    public String format(String query, ProcessedResult result) {
         return result.toString();
     }
 }

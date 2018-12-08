@@ -17,11 +17,6 @@
  * under the License.
  */
 package org.apache.tinkerpop.processedResultLogging;
-
-import org.apache.tinkerpop.gremlin.server.Context;
-import org.apache.tinkerpop.processedResultLogging.context.AnonymizedContext;
-import org.apache.tinkerpop.processedResultLogging.context.LogContext;
-import org.apache.tinkerpop.processedResultLogging.context.OriginalContext;
 import org.apache.tinkerpop.processedResultLogging.formatter.BasicProcessedResultFormatter;
 import org.apache.tinkerpop.processedResultLogging.formatter.LLOPJsonFormatter;
 import org.apache.tinkerpop.processedResultLogging.formatter.ProcessedResultFormatter;
@@ -31,6 +26,7 @@ import org.apache.tinkerpop.processedResultLogging.processor.ResultProcessor;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.util.SimpleLogger;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
@@ -46,12 +42,14 @@ import java.util.concurrent.Executors;
 public final class ProcessedResultManager {
 
     public static final ProcessedResultManager INST = new ProcessedResultManager();
-    //    private static final Logger processedResultLogger = LoggerFactory.getLogger(GremlinServer.PROCESSED_RESULT_LOGGER_NAME);
-    private static final Logger processedResultLogger = new SimpleLogger();
+    public static final String PROCESSED_RESULT_LOGGER_NAME = "processed.result.org.apache.tinkerpop.gremlin.server";
+    private final Logger serverProcessedResultLogger = LoggerFactory.getLogger(PROCESSED_RESULT_LOGGER_NAME);
+    private final Logger localProcessedResultLogger = new SimpleLogger();
+    private Logger logger = null;
     private ProcessedResultFormatter formatter = new BasicProcessedResultFormatter();
     private ResultProcessor processor = new PathProcessor();
     private final ExecutorService executor = Executors.newCachedThreadPool();
-    private ProcessedResultManager.Settings settings;
+    private ProcessedResultManager.Settings settings = new ProcessedResultManager.Settings();
 
     /**
      * Settings for the {@link ProcessedResultManager} implementation.
@@ -85,6 +83,15 @@ public final class ProcessedResultManager {
          * Anonymizes sensitive data in log. Default to false when not specified.
          */
         public boolean anonymized = false;
+        /**
+         * Sets the mode for local/server logging.
+         */
+        public boolean localMode = true;
+    }
+
+    private void applySetting(){
+        if (settings.localMode) logger = localProcessedResultLogger;
+        else logger = serverProcessedResultLogger;
     }
 
     private ProcessedResultManager() {
@@ -92,6 +99,7 @@ public final class ProcessedResultManager {
 
     public static void injectLocalSetting(ProcessedResultManager.Settings settings) {
         INST.settings = settings;
+        INST.applySetting();
     }
 
     /**
@@ -102,14 +110,14 @@ public final class ProcessedResultManager {
         this.log(null, it);
     }
 
-    public void log(Context ctx, Iterator it) {
+    public void log(String query, Iterator it) {
         if (settings.asyncMode)
-            executor.submit(() -> logAsync(ctx, it));
+            executor.submit(() -> logAsync(query, it));
         else
-            logAsync(ctx, it);
+            logAsync(query, it);
     }
 
-    private void logAsync(Context ctx, Iterator it) {
+    private void logAsync(String query, Iterator it) {
         // init processor
 //        settings = settings == null ? ctx.getSettings().processedResultLog : settings;
         if (!this.processor.getClass().getName().equals(settings.processor)) {
@@ -117,7 +125,7 @@ public final class ProcessedResultManager {
                 Class processorClass = Class.forName(settings.processor);
                 this.processor = ((Class<ResultProcessor>) processorClass).getDeclaredConstructor().newInstance();
             } catch (Exception e) {
-                processedResultLogger.error("Requested processor class: " + settings.formatter + " was not found or could not be instantiated", e);
+                logger.error("Requested processor class: " + settings.formatter + " was not found or could not be instantiated", e);
                 return;
             }
         }
@@ -127,39 +135,36 @@ public final class ProcessedResultManager {
                 Class newFormatter = Class.forName(settings.formatter);
                 this.formatter = ((Class<ProcessedResultFormatter>) newFormatter).getDeclaredConstructor().newInstance();
             } catch (Exception e) {
-                processedResultLogger.error("Requested formatter class: " + settings.formatter + " was not found or could not be instantiated", e);
+                logger.error("Requested formatter class: " + settings.formatter + " was not found or could not be instantiated", e);
                 return;
             }
         }
         // create processed result, log context and log the data with a formatter
         try {
             ProcessedResult result;
-            LogContext logCtx;
             if (settings.anonymized && processor instanceof AnonymizedResultProcessor) {
                 result = ((AnonymizedResultProcessor) processor).processAnonymously(it);
-                logCtx = new AnonymizedContext(ctx);
             } else if (settings.anonymized) {
-                processedResultLogger.error("Requested processor class: " + settings.processor + " does not implement " + AnonymizedResultProcessor.class.getSimpleName());
+                logger.error("Requested processor class: " + settings.processor + " does not implement " + AnonymizedResultProcessor.class.getSimpleName());
                 return;
             } else {
                 result = processor.process(it);
-                logCtx = new OriginalContext(ctx);
             }
-            processedResultLogger.info(formatter.format(logCtx, result));
+            logger.info(formatter.format(query, result));
 
             // an IllegalArgumentException thrown by a ResultProcessor. This exception is expected to sometimes occur,
             // f.e. when a result type doesn't correspond to an expected result type (f.e. other than a GraphTraversal type
             // in the case of a PathProcessor)
         } catch (IllegalArgumentException e) {
-            processedResultLogger.warn(e.getMessage());
+            logger.warn(e.getMessage());
 
             // an UnsupportedOperationException thrown by an AnonymizedContext which doesn't implement required methods yet
         } catch (UnsupportedOperationException e) {
-            processedResultLogger.error("Requested formatter logs data that are not yet supported in an anonymized output. Set anonymized property false or use another formatter.");
+            logger.error("Requested formatter logs data that are not yet supported in an anonymized output. Set anonymized property false or use another formatter.");
 
             // an unexpected exception
         } catch (Exception e) {
-            processedResultLogger.error("Unexpected exception", e);
+            logger.error("Unexpected exception", e);
         }
     }
 }

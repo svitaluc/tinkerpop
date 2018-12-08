@@ -18,24 +18,13 @@
  */
 package org.apache.tinkerpop.gremlin.process.traversal.strategy.finalization;
 
-import org.apache.tinkerpop.gremlin.process.computer.traversal.step.map.VertexProgramStep;
-import org.apache.tinkerpop.gremlin.process.traversal.Step;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.TraversalStrategy;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.DefaultGraphTraversal;
-import org.apache.tinkerpop.gremlin.process.traversal.step.map.PathStep;
-import org.apache.tinkerpop.gremlin.process.traversal.step.sideEffect.ProfileSideEffectStep;
-import org.apache.tinkerpop.gremlin.process.traversal.step.util.EmptyStep;
-import org.apache.tinkerpop.gremlin.process.traversal.step.util.ProfileStep;
 import org.apache.tinkerpop.gremlin.process.traversal.strategy.AbstractTraversalStrategy;
-import org.apache.tinkerpop.gremlin.process.traversal.util.TraversalHelper;
-import org.apache.tinkerpop.gremlin.server.Settings;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.processedResultLogging.ProcessedResultManager;
 import org.apache.tinkerpop.processedResultLogging.formatter.LLOPJsonFormatter;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This strategy is used for local logging of {@link org.apache.tinkerpop.processedResultLogging.result.ProcessedResult} without the need to run separate gremlin-server instance.
@@ -55,7 +44,7 @@ public final class LogPathStrategy extends AbstractTraversalStrategy<TraversalSt
 
     @Override
     public void apply(final Traversal.Admin<?, ?> traversal) {
-        if(traversal instanceof DefaultGraphTraversal && ! (traversal.getEndStep().getLabels().contains(MARKER))) {
+        if (traversal instanceof DefaultGraphTraversal && !(traversal.getEndStep().getLabels().contains(MARKER))) {
             traversal.getEndStep().addLabel(MARKER);
             Traversal.Admin<?, ?> clone = traversal.clone();
             ProcessedResultManager.INST.log(clone);

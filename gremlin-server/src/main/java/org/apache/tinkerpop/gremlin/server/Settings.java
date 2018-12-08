@@ -37,6 +37,7 @@ import org.apache.tinkerpop.gremlin.server.util.LifeCycleHook;
 //import org.apache.tinkerpop.processedResultLogging.formatter.BasicProcessedResultFormatter;
 //import org.apache.tinkerpop.processedResultLogging.processor.PathProcessor;
 import org.apache.tinkerpop.gremlin.structure.Graph;
+import org.apache.tinkerpop.processedResultLogging.ProcessedResultManager;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -232,7 +233,7 @@ public class Settings {
 
     public AuthenticationSettings authentication = new AuthenticationSettings();
 
-//    public ProcessedResultLogSettings processedResultLog = new ProcessedResultLogSettings();
+    public ProcessedResultManager.Settings processedResultLog = new ProcessedResultManager.Settings();
 
     /**
      * Custom settings for {@link OpProcessor} implementations. Implementations are loaded via
@@ -446,34 +447,6 @@ public class Settings {
          */
         public Map<String, Object> config = null;
     }
-
-    /**
-     * Settings for the {@link ProcessedResultManager} implementation.
-     *//*
-    public static class ProcessedResultLogSettings {
-        *//**
-         * Enable processed result logging. Other settings will be ignored unless this is set to true.
-         * Default to false when not specified, so no processed result will be logged regardless other
-         * properties setting.
-         *//*
-        public boolean enabled = false;
-        *//**
-         * The fully qualified class name of the {@link ResultProcessor} implementation.
-         * This class name will be used to load the implementation from the classpath.
-         * Default to {@link PathProcessor} when not specified.
-         *//*
-        public String processor = PathProcessor.class.getName();
-        *//**
-         * The fully qualified class name of the {@link ProcessedResultFormatter} implementation.
-         * This class name will be used to load the implementation from the classpath.
-         * Default to {@link BasicProcessedResultFormatter} when not specified.
-         *//*
-        public String formatter = BasicProcessedResultFormatter.class.getName();
-        *//**
-         * Anonymizes sensitive data in log. Default to false when not specified.
-         *//*
-        public boolean anonymized = false;
-    }*/
 
     /**
      * Settings to configure SSL support.

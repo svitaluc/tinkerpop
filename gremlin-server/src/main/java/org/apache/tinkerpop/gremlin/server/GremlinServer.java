@@ -63,7 +63,6 @@ public class GremlinServer {
 
     private static final String SERVER_THREAD_PREFIX = "gremlin-server-";
     public static final String AUDIT_LOGGER_NAME = "audit.org.apache.tinkerpop.gremlin.server";
-    public static final String PROCESSED_RESULT_LOGGER_NAME = "processed.result.org.apache.tinkerpop.gremlin.server";
 
     private static final Logger logger = LoggerFactory.getLogger(GremlinServer.class);
     private final Settings settings;

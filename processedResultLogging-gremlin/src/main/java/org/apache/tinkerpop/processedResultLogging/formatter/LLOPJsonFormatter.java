@@ -20,7 +20,6 @@ package org.apache.tinkerpop.processedResultLogging.formatter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.tinkerpop.processedResultLogging.context.LogContext;
 import org.apache.tinkerpop.processedResultLogging.result.LLOProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 
@@ -30,7 +29,7 @@ public class LLOPJsonFormatter implements ProcessedResultFormatter {
         gson = new GsonBuilder().registerTypeAdapter(LLOProcessedResult.class, new LLOProcessedResult.Serializer()).create();
     }
     @Override
-    public String format(LogContext ctx, ProcessedResult result) throws Exception {
+    public String format(String query, ProcessedResult result) throws Exception {
         if(!(result instanceof LLOProcessedResult))
             throw new Exception("The result for this formatter needs to be of type LLOProcessedResult");
         return gson.toJson(result);

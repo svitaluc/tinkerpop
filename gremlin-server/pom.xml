@@ -26,12 +26,12 @@ limitations under the License.
     <artifactId>gremlin-server</artifactId>
     <name>Apache TinkerPop :: Gremlin Server</name>
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>org.apache.tinkerpop</groupId>-->
-            <!--<artifactId>processedResultLogging-gremlin</artifactId>-->
-            <!--<version>${project.version}</version>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>processedResultLogging-gremlin</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.apache.tinkerpop</groupId>
             <artifactId>tinkergraph-gremlin</artifactId>
