@@ -19,8 +19,6 @@
 package org.apache.tinkerpop.processedResultLogging;
 
 import org.apache.tinkerpop.gremlin.server.Context;
-import org.apache.tinkerpop.gremlin.server.GremlinServer;
-import org.apache.tinkerpop.gremlin.server.Settings;
 import org.apache.tinkerpop.processedResultLogging.context.AnonymizedContext;
 import org.apache.tinkerpop.processedResultLogging.context.LogContext;
 import org.apache.tinkerpop.processedResultLogging.context.OriginalContext;
@@ -33,7 +31,6 @@ import org.apache.tinkerpop.processedResultLogging.processor.ResultProcessor;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.util.SimpleLogger;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
@@ -49,12 +46,13 @@ import java.util.concurrent.Executors;
 public final class ProcessedResultManager {
 
     public static final ProcessedResultManager INST = new ProcessedResultManager();
-//    private static final Logger processedResultLogger = LoggerFactory.getLogger(GremlinServer.PROCESSED_RESULT_LOGGER_NAME);
+    //    private static final Logger processedResultLogger = LoggerFactory.getLogger(GremlinServer.PROCESSED_RESULT_LOGGER_NAME);
     private static final Logger processedResultLogger = new SimpleLogger();
     private ProcessedResultFormatter formatter = new BasicProcessedResultFormatter();
     private ResultProcessor processor = new PathProcessor();
     private final ExecutorService executor = Executors.newCachedThreadPool();
     private ProcessedResultManager.Settings settings;
+
     /**
      * Settings for the {@link ProcessedResultManager} implementation.
      */
@@ -96,8 +94,16 @@ public final class ProcessedResultManager {
         INST.settings = settings;
     }
 
+    /**
+     * Local version of log, gremlin-server context is N/A.
+     * @param it
+     */
+    public void log(Iterator it) {
+        this.log(null, it);
+    }
+
     public void log(Context ctx, Iterator it) {
-        if(settings.asyncMode)
+        if (settings.asyncMode)
             executor.submit(() -> logAsync(ctx, it));
         else
             logAsync(ctx, it);

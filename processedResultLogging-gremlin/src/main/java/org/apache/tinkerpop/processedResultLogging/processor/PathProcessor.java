@@ -21,6 +21,7 @@ package org.apache.tinkerpop.processedResultLogging.processor;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.DefaultGraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
+import org.apache.tinkerpop.gremlin.process.traversal.step.map.PathStep;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.ImmutablePath;
 import org.apache.tinkerpop.processedResultLogging.util.ObjectAnonymizer;
 import org.apache.tinkerpop.processedResultLogging.result.LLOProcessedResult;
@@ -44,7 +45,9 @@ public class PathProcessor implements AnonymizedResultProcessor {
             return new LLOProcessedResult(resultList);
         }
         while (logIt.hasNext()) {
-            Path p = (ImmutablePath) logIt.next();
+            Object o = logIt.next();
+            if (!(o instanceof Path)) throw ResultProcessor.Exceptions.incorrectClassType(Path.class,o.getClass());
+            Path p = (ImmutablePath) o ;
 //            System.out.println(Arrays.toString(p.objects().toArray()));
             resultList.add((p).objects());
         }
@@ -77,6 +80,10 @@ public class PathProcessor implements AnonymizedResultProcessor {
         if (!(it instanceof DefaultGraphTraversal)) {
             throw ResultProcessor.Exceptions.unsupportedResultTypeForGivenMethod();
         }
-        logIt = ((DefaultGraphTraversal) it).clone().path();
+
+        logIt = ((DefaultGraphTraversal) it).clone();
+        if(!((DefaultGraphTraversal) logIt).getSteps().stream().anyMatch(o -> o instanceof PathStep)){
+            logIt = logIt.path();
+        }
     }
 }

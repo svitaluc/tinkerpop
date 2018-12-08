@@ -30,6 +30,7 @@ import java.util.Iterator;
 public interface ResultProcessor {
     /**
      * Processes the original result in a form of an {@link Iterator} to create a processed result.
+     *
      * @param it - original iterator that produces required result
      * @return processed result which is an outcome of a specific method used in a specific implementation
      * of the {@link ResultProcessor}
@@ -47,6 +48,10 @@ public interface ResultProcessor {
 
         protected static IllegalArgumentException unsupportedResultTypeForGivenMethod() {
             return new IllegalArgumentException("Requested processor does not support a result type of the given query.");
+        }
+
+        protected static IllegalArgumentException incorrectClassType(Class expected, Class got) {
+            return new IllegalArgumentException("Expected " + expected + " got " + got.getName());
         }
     }
 }
