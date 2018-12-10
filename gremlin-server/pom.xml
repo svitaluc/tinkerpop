@@ -28,7 +28,7 @@ limitations under the License.
     <dependencies>
         <dependency>
             <groupId>org.apache.tinkerpop</groupId>
-            <artifactId>processedResultLogging-gremlin</artifactId>
+            <artifactId>gremlin-processedResultLogging</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>

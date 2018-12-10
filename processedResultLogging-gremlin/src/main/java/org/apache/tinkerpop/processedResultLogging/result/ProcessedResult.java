@@ -25,7 +25,12 @@ import org.apache.tinkerpop.processedResultLogging.processor.ResultProcessor;
  * operation run on an original result.
  */
 public abstract class ProcessedResult {
-    private Object result;
+    protected Object result;
+    protected String query;
 
     public abstract String toString();
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
 }

@@ -32,6 +32,7 @@ public class LLOPJsonFormatter implements ProcessedResultFormatter {
     public String format(String query, ProcessedResult result) throws Exception {
         if(!(result instanceof LLOProcessedResult))
             throw new Exception("The result for this formatter needs to be of type LLOProcessedResult");
+        result.setQuery(query);
         return gson.toJson(result);
     }
 }

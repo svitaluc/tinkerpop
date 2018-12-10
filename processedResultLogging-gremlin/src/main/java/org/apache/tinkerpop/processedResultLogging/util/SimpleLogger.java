@@ -293,7 +293,12 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void error(String msg) {
-
+        try {
+            fw.write(msg);
+            fw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -313,7 +318,13 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void error(String msg, Throwable t) {
-
+        try {
+            fw.write(msg);
+            fw.write(t.getMessage());
+            fw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

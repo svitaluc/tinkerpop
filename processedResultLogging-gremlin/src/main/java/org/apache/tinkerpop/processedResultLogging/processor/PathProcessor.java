@@ -42,6 +42,8 @@ public class PathProcessor implements AnonymizedResultProcessor {
         List<List<Object>> resultList = new ArrayList<>();
 
         if (!logIt.hasNext()) {
+//            System.out.println(logIt);
+//            System.out.println(logIt.getClass().getName());
             return new LLOProcessedResult(resultList);
         }
         while (logIt.hasNext()) {
@@ -59,6 +61,7 @@ public class PathProcessor implements AnonymizedResultProcessor {
         List<String> resultList = new ArrayList<>();
 
         if (!logIt.hasNext()) {
+            System.out.println("No empty log IT");
             return new LSProcessedResult(resultList);
         }
 

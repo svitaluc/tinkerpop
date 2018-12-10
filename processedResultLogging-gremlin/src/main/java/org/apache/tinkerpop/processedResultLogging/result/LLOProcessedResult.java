@@ -34,7 +34,7 @@ public class LLOProcessedResult extends ProcessedResult {
         @Override
         public JsonElement serialize(LLOProcessedResult src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jsonResult = new JsonObject();
-            jsonResult.addProperty("Q", "");
+            jsonResult.addProperty("Q", src.query);
             JsonArray jsonQueryResults = new JsonArray();
             for (List<Object> path : src.result) {
                 JsonArray jsonPath = new JsonArray();

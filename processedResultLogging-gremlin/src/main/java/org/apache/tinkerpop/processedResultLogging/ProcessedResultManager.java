@@ -104,7 +104,7 @@ public final class ProcessedResultManager {
 
     /**
      * Local version of log, gremlin-server context is N/A.
-     * @param it
+     * @param it the traversal Iterator
      */
     public void log(Iterator it) {
         this.log(null, it);
@@ -119,7 +119,6 @@ public final class ProcessedResultManager {
 
     private void logAsync(String query, Iterator it) {
         // init processor
-//        settings = settings == null ? ctx.getSettings().processedResultLog : settings;
         if (!this.processor.getClass().getName().equals(settings.processor)) {
             try {
                 Class processorClass = Class.forName(settings.processor);

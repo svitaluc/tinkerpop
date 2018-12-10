@@ -9,7 +9,7 @@
     <!--</parent>-->
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.tinkerpop</groupId>
-    <artifactId>processedResultLogging-gremlin</artifactId>
+    <artifactId>gremlin-processedResultLogging</artifactId>
     <version>3.3.3</version>
     <name>Processed Result Logging :: Gremlin</name>
     <dependencies>
