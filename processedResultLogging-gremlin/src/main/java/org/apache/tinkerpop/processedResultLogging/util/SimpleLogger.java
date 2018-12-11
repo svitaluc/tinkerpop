@@ -18,10 +18,10 @@
  */
 package org.apache.tinkerpop.processedResultLogging.util;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -48,27 +48,27 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void trace(String msg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void trace(String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void trace(String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void trace(String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void trace(String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -78,27 +78,27 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void trace(Marker marker, String msg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void trace(Marker marker, String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void trace(Marker marker, String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void trace(Marker marker, String format, Object... argArray) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void trace(Marker marker, String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -108,27 +108,27 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void debug(String msg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void debug(String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void debug(String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void debug(String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void debug(String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -138,27 +138,27 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void debug(Marker marker, String msg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void debug(Marker marker, String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void debug(Marker marker, String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void debug(Marker marker, String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void debug(Marker marker, String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -178,22 +178,22 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void info(String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void info(String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void info(String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void info(String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -203,27 +203,27 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void info(Marker marker, String msg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void info(Marker marker, String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void info(Marker marker, String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void info(Marker marker, String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void info(Marker marker, String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -233,27 +233,27 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void warn(String msg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void warn(String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void warn(String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void warn(String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void warn(String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -263,27 +263,27 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void warn(Marker marker, String msg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void warn(Marker marker, String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void warn(Marker marker, String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void warn(Marker marker, String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void warn(Marker marker, String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -303,17 +303,17 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void error(String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void error(String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void error(String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -334,26 +334,26 @@ public class SimpleLogger  implements Logger {
 
     @Override
     public void error(Marker marker, String msg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void error(Marker marker, String format, Object arg) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void error(Marker marker, String format, Object arg1, Object arg2) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void error(Marker marker, String format, Object... arguments) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void error(Marker marker, String msg, Throwable t) {
-
+        throw new NotImplementedException();
     }
 }

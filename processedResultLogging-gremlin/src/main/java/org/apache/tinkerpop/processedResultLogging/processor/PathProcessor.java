@@ -85,7 +85,7 @@ public class PathProcessor implements AnonymizedResultProcessor {
         }
 
         logIt = ((DefaultGraphTraversal) it).clone();
-        if(!((DefaultGraphTraversal) logIt).getSteps().stream().anyMatch(o -> o instanceof PathStep)){
+        if(!(((DefaultGraphTraversal) logIt).getEndStep() instanceof PathStep)){
             logIt = logIt.path();
         }
     }
