@@ -23,6 +23,7 @@ import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
  * A {@link LLOProcessedResult} is a {@link ProcessedResult} of a type List<List<Object>>.
  */
 public class LLOProcessedResult extends ProcessedResult {
-    public static class Serializer implements JsonSerializer<LLOProcessedResult> {
+    private static class Serializer implements JsonSerializer<LLOProcessedResult> {
         @Override
         public JsonElement serialize(LLOProcessedResult src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jsonResult = new JsonObject();
@@ -44,7 +45,13 @@ public class LLOProcessedResult extends ProcessedResult {
                         jsonObject.addProperty("v", (Number) ((Vertex) element).id());
                     else if (element instanceof Edge)
                         jsonObject.addProperty("e", (Number) ((Edge) element).id());
-                    else
+                    else if (element instanceof String) {
+                        String[] splits = ((String) element).split(":", 2);
+                        if(splits.length==2)
+                            jsonObject.addProperty(splits[0], Long.decode(splits[1]));
+                        else
+                            jsonObject.addProperty("unknownType", (String) element);
+                    } else
                         jsonObject.addProperty("unknownType", element.getClass().getSimpleName());
                     jsonPath.add(jsonObject);
                 }
@@ -55,10 +62,19 @@ public class LLOProcessedResult extends ProcessedResult {
         }
     }
 
+
     private List<List<Object>> result;
+    public LLOProcessedResult(){
+        result = new ArrayList<>();
+    }
 
     public LLOProcessedResult(List<List<Object>> result) {
         this.result = result;
+    }
+
+    @Override
+    public JsonSerializer<? extends ProcessedResult> Serializer() {
+        return new Serializer();
     }
 
     @Override

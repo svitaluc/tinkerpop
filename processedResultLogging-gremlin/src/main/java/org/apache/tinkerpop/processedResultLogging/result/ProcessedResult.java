@@ -18,6 +18,7 @@
  */
 package org.apache.tinkerpop.processedResultLogging.result;
 
+import com.google.gson.JsonSerializer;
 import org.apache.tinkerpop.processedResultLogging.processor.ResultProcessor;
 
 /**
@@ -27,6 +28,7 @@ import org.apache.tinkerpop.processedResultLogging.processor.ResultProcessor;
 public abstract class ProcessedResult {
     protected Object result;
     protected String query;
+    abstract public JsonSerializer<? extends ProcessedResult> Serializer();
 
     public abstract String toString();
 

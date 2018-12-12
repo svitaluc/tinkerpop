@@ -26,7 +26,7 @@ import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 public class LLOPJsonFormatter implements ProcessedResultFormatter {
     private static Gson gson;
     static {
-        gson = new GsonBuilder().registerTypeAdapter(LLOProcessedResult.class, new LLOProcessedResult.Serializer()).create();
+        gson = new GsonBuilder().registerTypeAdapter(LLOProcessedResult.class, new LLOProcessedResult().Serializer()).create();
     }
     @Override
     public String format(String query, ProcessedResult result) throws Exception {

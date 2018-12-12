@@ -23,12 +23,14 @@ import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.DefaultGraphTrav
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.step.map.PathStep;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.ImmutablePath;
-import org.apache.tinkerpop.processedResultLogging.util.ObjectAnonymizer;
 import org.apache.tinkerpop.processedResultLogging.result.LLOProcessedResult;
-import org.apache.tinkerpop.processedResultLogging.result.LSProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
+import org.apache.tinkerpop.processedResultLogging.util.ObjectAnonymizer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A {@link PathProcessor} calls a {@link GraphTraversal#path()} method on a copy of an original result.
@@ -48,8 +50,8 @@ public class PathProcessor implements AnonymizedResultProcessor {
         }
         while (logIt.hasNext()) {
             Object o = logIt.next();
-            if (!(o instanceof Path)) throw ResultProcessor.Exceptions.incorrectClassType(Path.class,o.getClass());
-            Path p = (ImmutablePath) o ;
+            if (!(o instanceof Path)) throw ResultProcessor.Exceptions.incorrectClassType(Path.class, o.getClass());
+            Path p = (ImmutablePath) o;
 //            System.out.println(Arrays.toString(p.objects().toArray()));
             resultList.add((p).objects());
         }
@@ -58,25 +60,22 @@ public class PathProcessor implements AnonymizedResultProcessor {
 
     public ProcessedResult processAnonymously(Iterator it) {
         init(it);
-        List<String> resultList = new ArrayList<>();
+        List<List<Object>> resultList = new ArrayList<>();
 
         if (!logIt.hasNext()) {
-            System.out.println("No empty log IT");
-            return new LSProcessedResult(resultList);
+//            System.out.println(logIt);
+//            System.out.println(logIt.getClass().getName());
+            return new LLOProcessedResult(resultList);
         }
-
         while (logIt.hasNext()) {
-            List<Object> pathObjects = ((ImmutablePath) logIt.next()).objects();
-            StringJoiner pathJoiner = new StringJoiner(",");
-            for (int i = 0; i < pathObjects.size(); i++) {
-                String anonymizedObject = ObjectAnonymizer.toString(pathObjects.get(i));
-                if (anonymizedObject != null) {
-                    pathJoiner.add(anonymizedObject);
-                }
-            }
-            resultList.add(pathJoiner.toString());
+            Object o = logIt.next();
+            if (!(o instanceof Path)) throw ResultProcessor.Exceptions.incorrectClassType(Path.class, o.getClass());
+            Path p = (ImmutablePath) o;
+//            System.out.println(Arrays.toString(p.objects().toArray()));
+            resultList.add(p.objects().stream().map(ObjectAnonymizer::toString).collect(Collectors.toList()));
         }
-        return new LSProcessedResult(resultList);
+        return new LLOProcessedResult(resultList);
+
     }
 
     private void init(Iterator it) throws IllegalArgumentException {
@@ -85,7 +84,7 @@ public class PathProcessor implements AnonymizedResultProcessor {
         }
 
         logIt = ((DefaultGraphTraversal) it).clone();
-        if(!(((DefaultGraphTraversal) logIt).getEndStep() instanceof PathStep)){
+        if (!(((DefaultGraphTraversal) logIt).getEndStep() instanceof PathStep)) {
             logIt = logIt.path();
         }
     }
