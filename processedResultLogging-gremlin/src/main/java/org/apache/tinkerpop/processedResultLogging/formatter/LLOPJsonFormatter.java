@@ -29,9 +29,9 @@ public class LLOPJsonFormatter implements ProcessedResultFormatter {
         gson = new GsonBuilder().registerTypeAdapter(LLOProcessedResult.class, new LLOProcessedResult().Serializer()).create();
     }
     @Override
-    public String format(String query, ProcessedResult result) throws Exception {
+    public String format(String query, ProcessedResult result) throws IllegalArgumentException {
         if(!(result instanceof LLOProcessedResult))
-            throw new Exception("The result for this formatter needs to be of type LLOProcessedResult");
+            throw new IllegalArgumentException("The result for this formatter needs to be of type LLOProcessedResult");
         result.setQuery(query);
         return gson.toJson(result);
     }

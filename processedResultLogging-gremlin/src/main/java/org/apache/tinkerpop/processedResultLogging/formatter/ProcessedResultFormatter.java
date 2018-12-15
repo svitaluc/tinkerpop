@@ -33,5 +33,5 @@ public interface ProcessedResultFormatter {
      * @param result - the processed result to be formatted
      * @return the formatted context information and processed result
      */
-    public String format(String query, ProcessedResult result) throws Exception;
+    public String format(String query, ProcessedResult result) throws IllegalArgumentException;
 }

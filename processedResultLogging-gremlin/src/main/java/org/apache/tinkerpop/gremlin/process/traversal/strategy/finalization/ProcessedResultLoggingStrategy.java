@@ -30,13 +30,13 @@ import org.apache.tinkerpop.processedResultLogging.formatter.LLOPJsonFormatter;
 /**
  * This strategy is used for local logging of {@link org.apache.tinkerpop.processedResultLogging.result.ProcessedResult} without the need to run separate gremlin-server instance.
  */
-public final class LogPathStrategy extends AbstractTraversalStrategy<TraversalStrategy.FinalizationStrategy> implements TraversalStrategy.FinalizationStrategy {
+public final class ProcessedResultLoggingStrategy extends AbstractTraversalStrategy<TraversalStrategy.FinalizationStrategy> implements TraversalStrategy.FinalizationStrategy {
 
-    private static final LogPathStrategy INSTANCE = new LogPathStrategy();
-    private static final String MARKER = Graph.Hidden.hide("gremlin.logPath");
+    private static final ProcessedResultLoggingStrategy INSTANCE = new ProcessedResultLoggingStrategy();
+    private static final String MARKER = Graph.Hidden.unHide("gremlin.logPath");
     private ProcessedResultManager.Settings logSettings;
 
-    private LogPathStrategy() {
+    private ProcessedResultLoggingStrategy() {
         logSettings = new ProcessedResultManager.Settings();
         logSettings.enabled = true;
         logSettings.formatter = LLOPJsonFormatter.class.getName();
@@ -44,7 +44,7 @@ public final class LogPathStrategy extends AbstractTraversalStrategy<TraversalSt
     }
 
     @Override
-    public void apply(final Traversal.Admin<?, ?> traversal) {
+    public synchronized void apply(final Traversal.Admin<?, ?> traversal) {
         if (traversal.getParent() instanceof EmptyStep && traversal instanceof DefaultGraphTraversal && !(traversal.getEndStep().getLabels().contains(MARKER))) {
             traversal.getEndStep().addLabel(MARKER);
             ProcessedResultManager.INST.log(traversal.toString(), traversal);
@@ -52,7 +52,7 @@ public final class LogPathStrategy extends AbstractTraversalStrategy<TraversalSt
 
     }
 
-    public static LogPathStrategy instance() {
+    public static ProcessedResultLoggingStrategy instance() {
         return INSTANCE;
     }
 }

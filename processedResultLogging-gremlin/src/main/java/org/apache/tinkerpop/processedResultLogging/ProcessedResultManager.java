@@ -162,8 +162,6 @@ public final class ProcessedResultManager {
             logger.error("Requested formatter logs data that are not yet supported in an anonymized output. Set anonymized property false or use another formatter.");
 
             // an unexpected exception
-        } catch (Exception e) {
-            logger.error("Unexpected exception", e);
         }
     }
 }

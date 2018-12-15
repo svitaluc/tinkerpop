@@ -25,7 +25,7 @@ import org.slf4j.Marker;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class SimpleLogger  implements Logger {
+public class SimpleLogger implements Logger {
     private static FileWriter fw = null;
 
     static {
@@ -167,9 +167,9 @@ public class SimpleLogger  implements Logger {
     }
 
     @Override
-    public void info(String msg) {
+    public synchronized void info(String msg) {
         try {
-            fw.write(msg+"\n");
+            fw.write(msg + "\n");
             fw.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -292,10 +292,12 @@ public class SimpleLogger  implements Logger {
     }
 
     @Override
-    public void error(String msg) {
+    public synchronized void error(String msg) {
         try {
-            fw.write(msg);
-            fw.flush();
+            if (msg != null) {
+                fw.write(msg);
+                fw.flush();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -317,10 +319,10 @@ public class SimpleLogger  implements Logger {
     }
 
     @Override
-    public void error(String msg, Throwable t) {
+    public synchronized void error(String msg, Throwable t) {
         try {
             fw.write(msg);
-            fw.write(t.getMessage());
+            if (t != null && t.getMessage() != null) fw.write(t.getMessage());
             fw.flush();
         } catch (IOException e) {
             e.printStackTrace();

@@ -47,12 +47,12 @@ public class LLOProcessedResult extends ProcessedResult {
                         jsonObject.addProperty("e", (Number) ((Edge) element).id());
                     else if (element instanceof String) {
                         String[] splits = ((String) element).split(":", 2);
-                        if(splits.length==2)
+                        if (splits.length == 2)
                             jsonObject.addProperty(splits[0], Long.decode(splits[1]));
                         else
                             jsonObject.addProperty("unknownType", (String) element);
                     } else
-                        jsonObject.addProperty("unknownType", element.getClass().getSimpleName());
+                        jsonObject.addProperty("unknownType", element.getClass().getSimpleName() + ": " + element.toString());
                     jsonPath.add(jsonObject);
                 }
                 jsonQueryResults.add(jsonPath);
@@ -64,7 +64,8 @@ public class LLOProcessedResult extends ProcessedResult {
 
 
     private List<List<Object>> result;
-    public LLOProcessedResult(){
+
+    public LLOProcessedResult() {
         result = new ArrayList<>();
     }
 
