@@ -17,7 +17,7 @@ limitations under the License.
 = Processed Result Logging
 
 Processed Result Logging enables to silently perform an additional operation on
-a result of a query and to log the outcome of this additional operation in a
+a result of a query and to log the outcome of this operation in a
 predefined format.
 
 In order to successfully log an outcome of an additional operation, the operation
@@ -58,11 +58,14 @@ whether they are compatible with anonymized logging:
 
 [.result]
 ====
-* basic
+* BasicProcessedResultFormatter
   ** org.apache.tinkerpop.processedResultLogging.formatter.BasicProcessedResultFormatter
   ** is compatible with anonymized logging
-* query
+* QueryProcessedResultFormatter
   ** org.apache.tinkerpop.processedResultLogging.formatter.QueryProcessedResultFormatter
+  ** is not yet compatible with anonymized logging
+* LLOPJsonFormatter
+  ** org.apache.tinkerpop.processedResultLogging.formatter.LLOPJsonFormatter
   ** is not yet compatible with anonymized logging
 ====
 
@@ -70,20 +73,22 @@ For description of the formatters see section <<Formatters>>.
 
 == Settings
 
-In order to set a processed result logging, corresponding options must be
-set in a yaml configuration file.
+In order to set a processed result logging, corresponding options must be set in a configuration.
 
-The configuration file to be adjusted is `conf/gremlin-server.yaml`.
+The configuration is stored in the class `ProcessedResultManager.Settings` which can be injected to the `ProcessedResultManager` singleton instance.
 
+When used in Gremlin Server environment the configuration is loaded from file `conf/gremlin-server.yaml`.
 The key for these properties is `processedResultLog`.
 
 [width="100%",cols="3,10,^2",options="header"]
 |=========================================================
 |Subkey |Description |Default
-| enabled | Enables Processed Result Logging. To start Processed Result Logging set this property to 'true'. |false
+| enabled | Enables Processed Result Logging in Gremlin Server environment. To start Processed Result Logging set this property to 'true'. |false
+| asyncMode | Sets whether the logging should be done in a separate thread or in the current thread |false
 | processor | An optional property determining a processor to be run on a result. Argument of the `processor` property is the fully qualified classname of a class providing the processed result logging. It is a class implementing the ResultProcessor interface.|PathProcessor
 | formatter | An optional property setting a log format. Argument of the `formatter` property is the fully qualified classname of a class providing the formatter. It is a class implementing the ProcessedResultFormatter interface. See the <<List of provided formats>> and <<Formats>> section for further information.|BasicProcessedResultFormatter
 | anonymized | An optional property setting an anonymized log. An anonymized log shouldn't contain any sensitive information about data stored in a graph. |false
+| localMode | If set to false the environment is assumed to be Gremlin Server and the logging will be handled through its `sl4j` logging backend. If true the logging is done through `SimpleLogger` class implemented in this package and it is necessary to use `ProcessedResultLoggingStrategy` with the `Traversal` from which the results are supposed to be logged  |true
 |=========================================================
 
 === Example
@@ -91,8 +96,8 @@ Settings for Processed Result Logging with PathProcessor, QueryFormatter can for
 
  processedResultLog: {
     enabled: true
-    org.apache.tinkerpop.processedResultLogging.processor: org.apache.tinkerpop.processedResultLogging.processor.PathProcessor
-    org.apache.tinkerpop.processedResultLogging.formatter: org.apache.tinkerpop.processedResultLogging.formatter.QueryProcessedResultFormatter
+    processor: org.apache.tinkerpop.processedResultLogging.processor.PathProcessor
+    formatter: org.apache.tinkerpop.processedResultLogging.formatter.QueryProcessedResultFormatter
  }
 
 Processor property doesn't have to be mentioned in this case as PathProcessor is a default value. For an anonymized property we used false value (by default).
@@ -143,6 +148,22 @@ _Example of basic format output:_
  #PR:
  v[1], e[7][1-knows->2], v[2], vadas
  v[1], e[8][1-knows->4], v[4], josh
+
+==== LLOPJsonFormatter
+
+ LLOPJsonFormatter formatter logs the query and its processed results in a JSON format. This formatter
+ is implemented to work with `PathProcessor` which returns `LLOProcessedResult`. The serialization to JSON is implemented
+ in `LLOProcessedResult.Serializer` and will work with Gson library.
+ This format is not compatible with anonymized logging.
+ _Example of LLOP JSON format output:_
+
+  {
+   Q:"g.V(1).outE('knows').inV().values('name')",
+   R:[
+      ["v":1,"e":7,"v":2,"unknownType":"vadas"],
+      ["v":1,"e":8,"v":4,"unknownType":"josh"]
+     ]
+  }
 
 == For Developers
 

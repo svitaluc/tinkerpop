@@ -41,7 +41,7 @@ import java.util.concurrent.Executors;
  */
 public final class ProcessedResultManager {
 
-    public static final ProcessedResultManager INST = new ProcessedResultManager();
+    private static volatile ProcessedResultManager INST = null;
     public static final String PROCESSED_RESULT_LOGGER_NAME = "processed.result.org.apache.tinkerpop.gremlin.server";
     private final Logger serverProcessedResultLogger = LoggerFactory.getLogger(PROCESSED_RESULT_LOGGER_NAME);
     private final Logger localProcessedResultLogger = new SimpleLogger();
@@ -50,6 +50,25 @@ public final class ProcessedResultManager {
     private ResultProcessor processor = new PathProcessor();
     private final ExecutorService executor = Executors.newCachedThreadPool();
     private ProcessedResultManager.Settings settings = new ProcessedResultManager.Settings();
+    public static ProcessedResultManager Instance(){
+        if(INST!=null) return INST;
+        INST = new ProcessedResultManager();
+        return INST;
+
+    }
+
+    /**
+     * Return the instance but inject the provided Setting if the instance is not yet created
+     * @param s the Setting to be injected
+     * @return the instance
+     */
+    public static ProcessedResultManager Instance(Settings s){
+        if(INST!=null) return INST;
+        INST = new ProcessedResultManager();
+        injectLocalSetting(s);
+        return INST;
+
+    }
 
     /**
      * Settings for the {@link ProcessedResultManager} implementation.
@@ -87,6 +106,12 @@ public final class ProcessedResultManager {
          * Sets the mode for local/server logging.
          */
         public boolean localMode = true;
+
+
+    }
+
+    public void setSetting(Settings settings){
+        this.settings = settings;
     }
 
     private void applySetting(){

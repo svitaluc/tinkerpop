@@ -118,6 +118,7 @@ public abstract class AbstractEvalOpProcessor extends AbstractOpProcessor {
         for (Pop enumItem : Pop.values()) {
             INVALID_BINDINGS_KEYS.add(enumItem.name());
         }
+
     }
 
     protected AbstractEvalOpProcessor(final boolean manageTransactions) {
@@ -247,7 +248,7 @@ public abstract class AbstractEvalOpProcessor extends AbstractOpProcessor {
                         auditLogger.info("User with address {} requested: {}", address, script);
                     }
                     if(settings.processedResultLog.enabled){
-                        ProcessedResultManager.INST.log(script, itty);
+                        ProcessedResultManager.Instance(settings.processedResultLog).log(script, itty);
                     }
 
                     try {

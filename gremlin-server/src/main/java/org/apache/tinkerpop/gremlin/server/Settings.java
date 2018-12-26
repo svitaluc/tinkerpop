@@ -301,6 +301,9 @@ public class Settings {
         final TypeDescription authenticationSettings = new TypeDescription(AuthenticationSettings.class);
         constructor.addTypeDescription(authenticationSettings);
 
+        final TypeDescription PRLSettings = new TypeDescription(ProcessedResultManager.Settings.class);
+        constructor.addTypeDescription(PRLSettings);
+
         final TypeDescription serverMetricsDescription = new TypeDescription(ServerMetrics.class);
         constructor.addTypeDescription(serverMetricsDescription);
 

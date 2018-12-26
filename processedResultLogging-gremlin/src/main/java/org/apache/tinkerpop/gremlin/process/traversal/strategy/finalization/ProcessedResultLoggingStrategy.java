@@ -40,14 +40,13 @@ public final class ProcessedResultLoggingStrategy extends AbstractTraversalStrat
         logSettings = new ProcessedResultManager.Settings();
         logSettings.enabled = true;
         logSettings.formatter = LLOPJsonFormatter.class.getName();
-        ProcessedResultManager.injectLocalSetting(logSettings);
     }
 
     @Override
     public synchronized void apply(final Traversal.Admin<?, ?> traversal) {
         if (traversal.getParent() instanceof EmptyStep && traversal instanceof DefaultGraphTraversal && !(traversal.getEndStep().getLabels().contains(MARKER))) {
             traversal.getEndStep().addLabel(MARKER);
-            ProcessedResultManager.INST.log(traversal.toString(), traversal);
+            ProcessedResultManager.Instance(logSettings).log(traversal.toString(), traversal);
         }
 
     }

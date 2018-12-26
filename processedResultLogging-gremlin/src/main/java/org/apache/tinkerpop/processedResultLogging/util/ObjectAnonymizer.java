@@ -34,6 +34,8 @@ public class ObjectAnonymizer {
      *    - an {@link Edge}: "e:<id>"
      *    - a {@link Vertex}: "v:<id>"
      *    - other: null
+     *
+     * WARNING: If the ID of the {@link org.apache.tinkerpop.gremlin.structure.Element} contains some information it will remain exposed.
      * @param object - an {@link Edge}, a {@link Vertex} or another type of Object
      * @return an anonymized string value of an object, null if the input object isn't an {@link Edge} or a {@link Vertex}
      */
