@@ -78,7 +78,7 @@ In order to set a processed result logging, corresponding options must be set in
 The configuration is stored in the class `ProcessedResultManager.Settings` which can be injected to the `ProcessedResultManager` singleton instance.
 
 When used in Gremlin Server environment the configuration is loaded from file `conf/gremlin-server.yaml`.
-The key for these properties is `processedResultLog`.
+The key to a set of these properties is `processedResultLog`.
 
 [width="100%",cols="3,10,^2",options="header"]
 |=========================================================

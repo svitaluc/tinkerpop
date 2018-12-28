@@ -21,7 +21,11 @@ package org.apache.tinkerpop.processedResultLogging.processor;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.DefaultGraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
+import org.apache.tinkerpop.gremlin.process.traversal.step.filter.DropStep;
+import org.apache.tinkerpop.gremlin.process.traversal.step.map.AddEdgeStep;
+import org.apache.tinkerpop.gremlin.process.traversal.step.map.AddVertexStep;
 import org.apache.tinkerpop.gremlin.process.traversal.step.map.PathStep;
+import org.apache.tinkerpop.gremlin.process.traversal.step.sideEffect.AddPropertyStep;
 import org.apache.tinkerpop.gremlin.process.traversal.step.util.ImmutablePath;
 import org.apache.tinkerpop.processedResultLogging.result.LLOProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
@@ -82,9 +86,14 @@ public class PathProcessor implements AnonymizedResultProcessor {
         if (!(it instanceof DefaultGraphTraversal)) {
             throw ResultProcessor.Exceptions.unsupportedResultTypeForGivenMethod();
         }
+        if(!((DefaultGraphTraversal) logIt).getSteps().stream().anyMatch(
+                o -> o instanceof AddVertexStep || o instanceof AddEdgeStep
+                  || o instanceof DropStep || o instanceof AddPropertyStep)){ //TODO add more idempotent steps
+            throw new IllegalArgumentException("The Traversal is not idempotent - can't process the it");
+        }
 
         logIt = ((DefaultGraphTraversal) it).clone();
-        if(!((DefaultGraphTraversal) logIt).getSteps().stream().anyMatch(o -> o instanceof PathStep)){ //TODO make better conditio for detection that the result will we of type Path
+        if(!((DefaultGraphTraversal) logIt).getSteps().stream().anyMatch(o -> o instanceof PathStep)){ //TODO make better conditino for detection that the result will we of type Path
             logIt = logIt.path();
         }
     }
