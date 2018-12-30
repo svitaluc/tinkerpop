@@ -23,7 +23,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.tinkerpop.processedResultLogging.result.LLOProcessedResult;
 import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 
-public class LLOPJsonFormatter implements ProcessedResultFormatter {
+public class LLOJsonFormatter implements ProcessedResultFormatter {
     private static Gson gson;
     static {
         gson = new GsonBuilder().registerTypeAdapter(LLOProcessedResult.class, new LLOProcessedResult().Serializer()).create();

@@ -18,7 +18,7 @@
  */
 package org.apache.tinkerpop.processedResultLogging;
 import org.apache.tinkerpop.processedResultLogging.formatter.BasicProcessedResultFormatter;
-import org.apache.tinkerpop.processedResultLogging.formatter.LLOPJsonFormatter;
+import org.apache.tinkerpop.processedResultLogging.formatter.LLOJsonFormatter;
 import org.apache.tinkerpop.processedResultLogging.formatter.ProcessedResultFormatter;
 import org.apache.tinkerpop.processedResultLogging.processor.AnonymizedResultProcessor;
 import org.apache.tinkerpop.processedResultLogging.processor.PathProcessor;
@@ -97,7 +97,7 @@ public final class ProcessedResultManager {
          * This class name will be used to load the implementation from the classpath.
          * Default to {@link BasicProcessedResultFormatter} when not specified.
          */
-        public String formatter = LLOPJsonFormatter.class.getName();
+        public String formatter = LLOJsonFormatter.class.getName();
         /**
          * Anonymizes sensitive data in log. Default to false when not specified.
          */

@@ -23,15 +23,15 @@ import org.apache.tinkerpop.processedResultLogging.result.ProcessedResult;
 
 /**
  *  A {@link ProcessedResultFormatter} formats {@link ProcessedResult} into a final log.
- *  The Formatter takes a LogContext and a ProcessedResult ond converts them to a string.
+ *  The Formatter takes a String representing a query and a ProcessedResult and converts them to a string.
  *  Some formatters (such as the BasicProcessedResultFormatter) don't need to use information from a LogContext.
  */
 public interface ProcessedResultFormatter {
     /**
-     * Format the given LogContext and ProcessedResult and return the formatted string.
+     * Formats the given string and ProcessedResult and returns the formatted string.
      * @param query - the query of the result
      * @param result - the processed result to be formatted
-     * @return the formatted context information and processed result
+     * @return the formatted query information and processed result
      */
     public String format(String query, ProcessedResult result) throws IllegalArgumentException;
 }

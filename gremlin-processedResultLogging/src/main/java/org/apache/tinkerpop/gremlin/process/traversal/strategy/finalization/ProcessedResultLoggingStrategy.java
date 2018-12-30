@@ -25,7 +25,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.step.util.EmptyStep;
 import org.apache.tinkerpop.gremlin.process.traversal.strategy.AbstractTraversalStrategy;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.processedResultLogging.ProcessedResultManager;
-import org.apache.tinkerpop.processedResultLogging.formatter.LLOPJsonFormatter;
+import org.apache.tinkerpop.processedResultLogging.formatter.LLOJsonFormatter;
 
 /**
  * This strategy is used for local logging of {@link org.apache.tinkerpop.processedResultLogging.result.ProcessedResult} without the need to run separate gremlin-server instance.
@@ -39,7 +39,7 @@ public final class ProcessedResultLoggingStrategy extends AbstractTraversalStrat
     private ProcessedResultLoggingStrategy() {
         logSettings = new ProcessedResultManager.Settings();
         logSettings.enabled = true;
-        logSettings.formatter = LLOPJsonFormatter.class.getName();
+        logSettings.formatter = LLOJsonFormatter.class.getName();
     }
 
     @Override
