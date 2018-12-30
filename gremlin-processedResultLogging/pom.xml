@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <!--<parent>-->
-        <!--<artifactId>tinkerpop</artifactId>-->
-        <!--<groupId>org.apache.tinkerpop</groupId>-->
-        <!--<version>3.3.3</version>-->
-    <!--</parent>-->
+    <parent>
+        <artifactId>tinkerpop</artifactId>
+        <groupId>org.apache.tinkerpop</groupId>
+        <version>3.3.3</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.apache.tinkerpop</groupId>
+    <!--<groupId>org.apache.tinkerpop</groupId>-->
     <artifactId>gremlin-processedResultLogging</artifactId>
     <version>3.3.3</version>
     <name>Processed Result Logging :: Gremlin</name>
@@ -17,11 +17,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.22</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tinkerpop</groupId>

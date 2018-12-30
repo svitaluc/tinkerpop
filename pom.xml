@@ -130,7 +130,7 @@ limitations under the License.
         <module>gremlin-server</module>
         <module>gremlin-archetype</module>
         <module>gremlin-tools</module>
-        <module>processedResultLogging-gremlin</module>
+        <module>gremlin-processedResultLogging</module>
     </modules>
     <scm>
         <connection>scm:git:git@git-wip-us.apache.org:repos/asf/tinkerpop.git</connection>
