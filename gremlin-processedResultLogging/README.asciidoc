@@ -154,13 +154,13 @@ is implemented to work with `PathProcessor` which returns `LLOProcessedResult`. 
 in `LLOProcessedResult.Serializer` and will work with Gson library.
 This format is not compatible with anonymized logging.
 
-_Example of LLOP JSON format output:_
+_Example of LLO JSON format output:_
 
   {
    Q:"g.V(1).outE('knows').inV().values('name')",
    R:[
-      ["v":1,"e":7,"v":2,"unknownType":"vadas"],
-      ["v":1,"e":8,"v":4,"unknownType":"josh"]
+      ["v":1,"e":7,"v":2,"person":"vadas"],
+      ["v":1,"e":8,"v":4,"person":"josh"]
      ]
   }
 
@@ -184,7 +184,7 @@ If you want to create a new formatter, create a class called `<formatter-name>Fo
 which implements the interface `ProcessedResultFormatter` and locate it within
 `formatter` package.
 
-Formatter has two parameters - a String and ProcessedResult. The String represents the query
+Formatter has two parameters - a `String` and a `ProcessedResult`. The `String` represents the query
 in its original form.
 If you want to implement an anonymized log, make sure that your result does not
 contain the query or that any sensitive information has been removed from it.
