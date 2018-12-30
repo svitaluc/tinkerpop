@@ -149,7 +149,7 @@ _Example of basic format output:_
 
 ==== LLOJsonFormatter
 
-LLOJsonFormatter formatter logs the query and its processed results in a JSON format. This formatter
+LLO JSON formatter logs the query and its processed results in a JSON format. This formatter
 is implemented to work with `PathProcessor` which returns `LLOProcessedResult`. The serialization to JSON is implemented
 in `LLOProcessedResult.Serializer` and will work with Gson library.
 This format is not compatible with anonymized logging.
