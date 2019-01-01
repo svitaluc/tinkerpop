@@ -50,9 +50,9 @@ public class LLOProcessedResult extends ProcessedResult {
                         if (splits.length == 2)
                             jsonObject.addProperty(splits[0], Long.decode(splits[1]));
                         else
-                            jsonObject.addProperty("unknownType", (String) element);
+                            jsonObject.addProperty("string", (String) element);
                     } else
-                        jsonObject.addProperty("unknownType", element.getClass().getSimpleName() + ": " + element.toString());
+                        jsonObject.addProperty(element.getClass().getSimpleName(), element.toString());
                     jsonPath.add(jsonObject);
                 }
                 jsonQueryResults.add(jsonPath);

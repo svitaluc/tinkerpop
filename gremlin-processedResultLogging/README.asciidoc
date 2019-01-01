@@ -159,8 +159,8 @@ _Example of LLO JSON format output:_
   {
    Q:"g.V(1).outE('knows').inV().values('name')",
    R:[
-      ["v":1,"e":7,"v":2,"person":"vadas"],
-      ["v":1,"e":8,"v":4,"person":"josh"]
+      [{"v":1},{"e":7},{"v":2},{"string":"vadas"}],
+      [{"v":1},{"e":8},{"v":4},{"string":"josh"}]
      ]
   }
 
